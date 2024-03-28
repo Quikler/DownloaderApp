@@ -1,0 +1,188 @@
+﻿<Page x:Class="DownloaderApp.MVVM.View.YoutubeView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:DownloaderApp.MVVM.View"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
+      xmlns:uc="clr-namespace:DownloaderApp.UserControls"
+      xmlns:vm="clr-namespace:DownloaderApp.MVVM.ViewModel"
+      Title="YoutubeView"
+      d:Background="LightGray"
+      d:DesignHeight="650"
+      d:DesignWidth="700"
+      mc:Ignorable="d">
+
+    <Page.DataContext>
+
+        <vm:YoutubeVM />
+
+    </Page.DataContext>
+
+    <StackPanel>
+
+        <Grid>
+
+            <uc:InfoSign Width="64"
+                         Height="64"
+                         HorizontalAlignment="Left"
+                         VerticalAlignment="Top"
+                         Background="#1D2B53"
+                         BadBackground="#FF004D"
+                         Cursor="Help"
+                         FontSize="32"
+                         FontWeight="Bold"
+                         Foreground="White"
+                         NeutralBackground="#1D2B53"
+                         State="{Binding InfoSignState}"
+                         SuccessBackground="Lime"
+                         ToolTip="{Binding InfoSignToolTip}" />
+
+            <Image Width="128"
+                   Height="128"
+                   Margin="0,0,0,16">
+
+                <Image.Source>
+
+                    <DrawingImage>
+
+                        <DrawingImage.Drawing>
+
+                            <DrawingGroup ClipGeometry="M0,0 V32 H32 V0 H0 Z">
+
+                                <GeometryDrawing Geometry="F1 M32,32z M0,0z M12.932,20.459L12.932,11.542 20.771,16.001z M30.368,8.735C30.014,7.434,29.014,6.428,27.743,6.072L27.716,6.066C24.523,5.66 20.83,5.428 17.082,5.428 16.701,5.428 16.321,5.43 15.942,5.435L16,5.434C15.678,5.43 15.299,5.427 14.918,5.427 11.17,5.427 7.475,5.659 3.848,6.108L4.282,6.064C2.985,6.427,1.985,7.432,1.638,8.707L1.632,8.733C1.232,10.842 1.004,13.269 1.004,15.749 1.004,15.837 1.004,15.925 1.005,16.012L1.005,15.998C1.005,16.072 1.004,16.16 1.004,16.248 1.004,18.728 1.233,21.154 1.67,23.507L1.632,23.263C1.986,24.564,2.986,25.57,4.257,25.926L4.284,25.932C7.47699999999999,26.338 11.17,26.57 14.918,26.57 15.298,26.57 15.678,26.568 16.058,26.563L16,26.564C16.322,26.568 16.702,26.571 17.082,26.571 20.831,26.571 24.525,26.339 28.152,25.89L27.718,25.934C29.016,25.572,30.016,24.566,30.364,23.291L30.37,23.265C30.769,21.156 30.997,18.729 30.997,16.25 30.997,16.162 30.997,16.074 30.996,15.987L30.996,16C30.996,15.926 30.997,15.838 30.997,15.75 30.997,13.27 30.768,10.844 30.331,8.491L30.369,8.735z">
+
+                                    <GeometryDrawing.Brush>
+
+                                        <LinearGradientBrush StartPoint="0,0"
+                                                             EndPoint="1,0">
+
+                                            <GradientStop Offset=".45"
+                                                          Color="#FF004D" />
+
+                                            <GradientStop Offset="1"
+                                                          Color="#FAEF5D" />
+
+                                        </LinearGradientBrush>
+
+                                    </GeometryDrawing.Brush>
+
+                                </GeometryDrawing>
+
+                            </DrawingGroup>
+
+                        </DrawingImage.Drawing>
+
+                    </DrawingImage>
+
+                </Image.Source>
+
+            </Image>
+
+            <ComboBox HorizontalAlignment="Right"
+                      VerticalAlignment="Top"
+                      ItemsSource="{Binding MediaFormats}"
+                      SelectedIndex="{Binding SelectedIndex}"
+                      Style="{StaticResource ComboBoxTheme}">
+
+                <ComboBox.ItemTemplate>
+
+                    <DataTemplate>
+
+                        <StackPanel Orientation="Horizontal">
+
+                            <Image Width="32"
+                                   Height="32">
+
+                                <Image.Source>
+
+                                    <DrawingImage>
+
+                                        <DrawingImage.Drawing>
+
+                                            <DrawingGroup ClipGeometry="{Binding ClipGeometry}">
+
+                                                <DrawingGroup Opacity="1">
+
+                                                    <GeometryDrawing Brush="White"
+                                                                     Geometry="{Binding Geometry}" />
+
+                                                </DrawingGroup>
+
+                                            </DrawingGroup>
+
+                                        </DrawingImage.Drawing>
+
+                                    </DrawingImage>
+
+                                </Image.Source>
+
+                            </Image>
+
+                            <TextBlock Margin="8,0,0,0"
+                                       VerticalAlignment="Center"
+                                       FontSize="20"
+                                       Foreground="White"
+                                       Text="{Binding Title}" />
+
+                        </StackPanel>
+
+                    </DataTemplate>
+
+                </ComboBox.ItemTemplate>
+
+            </ComboBox>
+
+        </Grid>
+
+        <uc:SearchTextBox xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+                          Padding="16,8"
+                          BorderBrush="#FF004D"
+                          BorderThickness="4"
+                          ButtonBackground="#FF004D"
+                          ButtonText="Download"
+                          ClickCommand="{Binding ButtonClickCommand}"
+                          CornerRadius="24"
+                          FontSize="18"
+                          IsButtonEnabled="{Binding IsDownloadButtonEnabled}"
+                          Placeholder="Enter download url"
+                          ShadowColor="#FF004D"
+                          Text="{Binding InputText, Mode=TwoWay}"
+                          TextChangedCommand="{Binding TextChangedCommand}" />
+
+        <Grid>
+
+            <TextBlock HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       FontSize="16"
+                       FontWeight="Medium"
+                       Foreground="White"
+                       Text="{Binding InfoText}"
+                       Typography.Capitals="AllSmallCaps" />
+
+            <uc:DirectoryDialog Margin="0,16"
+                                HorizontalAlignment="Right"
+                                Background="#1D2B53"
+                                FontSize="16"
+                                FontWeight="Medium"
+                                Foreground="White"
+                                SelectedPath="{Binding SelectedPath, Mode=OneWayToSource}" />
+
+        </Grid>
+
+        <uc:MediaCarousel Height="350"
+                          VerticalAlignment="Stretch"
+                          Background="Black"
+                          BorderBrush="Black"
+                          BorderThickness="1"
+                          ButtonBackground="#FAEF5D"
+                          ButtonDisableBackground="#FF004D"
+                          ButtonHoverBackground="#1C326E"
+                          IsSourceSelectable="False"
+                          MenuBackground="White"
+                          MenuForeground="Black"
+                          MenuHoverColor="LightGray"
+                          Source="{Binding MediaSource}" />
+    </StackPanel>
+
+</Page>

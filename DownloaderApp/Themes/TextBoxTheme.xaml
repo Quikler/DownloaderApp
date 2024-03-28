@@ -1,0 +1,71 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style x:Key="TextBoxTheme" TargetType="TextBox">
+
+        <Style.Setters>
+
+            <Setter Property="Template">
+
+                <Setter.Value>
+
+                    <ControlTemplate TargetType="TextBox">
+
+                        <Border Background="{TemplateBinding Background}" CornerRadius="10">
+
+                            <Grid>
+
+                                <TextBox x:Name="searchBox"
+                                         Margin="1"
+                                         Padding="5"
+                                         VerticalAlignment="Center"
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         FontSize="{TemplateBinding FontSize}"
+                                         Foreground="#000"
+                                         Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                                <TextBlock Grid.Column="1"
+                                           Margin="10,0,0,0"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Center"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           Foreground="LightGray"
+                                           IsHitTestVisible="False"
+                                           Text="{TemplateBinding Name}">
+
+                                    <TextBlock.Style>
+
+                                        <Style TargetType="TextBlock">
+
+                                            <Style.Triggers>
+
+                                                <DataTrigger Binding="{Binding ElementName=searchBox, Path=Text}" Value="">
+
+                                                    <Setter Property="Visibility" Value="Visible" />
+
+                                                </DataTrigger>
+
+                                            </Style.Triggers>
+
+                                            <Setter Property="Visibility" Value="Hidden" />
+
+                                        </Style>
+
+                                    </TextBlock.Style>
+
+                                </TextBlock>
+                            </Grid>
+
+                        </Border>
+
+                    </ControlTemplate>
+
+                </Setter.Value>
+
+            </Setter>
+
+        </Style.Setters>
+
+    </Style>
+
+</ResourceDictionary>

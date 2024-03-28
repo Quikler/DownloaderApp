@@ -1,0 +1,184 @@
+﻿<UserControl x:Class="DownloaderApp.UserControls.MediaSlider"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:DownloaderApp.UserControls"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:Background="LightGray"
+             d:DesignHeight="50"
+             d:DesignWidth="400"
+             mc:Ignorable="d">
+
+    <Grid x:Name="_sliderGrid">
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="Auto" />
+
+            <RowDefinition Height="Auto" />
+
+        </Grid.RowDefinitions>
+
+        <Slider x:Name="_slider"
+                Grid.Row="0"
+                VerticalAlignment="Bottom"
+                Cursor="Hand"
+                LargeChange="0"
+                Minimum="0"
+                PreviewMouseLeftButtonDown="_slider_PreviewMouseLeftButtonDown"
+                PreviewMouseLeftButtonUp="_slider_PreviewMouseLeftButtonUp"
+                SmallChange="5">
+
+            <Slider.Style>
+
+                <Style TargetType="Slider">
+
+                    <Setter Property="OverridesDefaultStyle"
+                            Value="true" />
+
+                    <Setter Property="Template">
+
+                        <Setter.Value>
+
+                            <ControlTemplate TargetType="Slider">
+
+                                <Grid>
+
+                                    <Border Name="PART_Border"
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Width="{TemplateBinding Width}"
+                                            Height="{TemplateBinding Height}"
+                                            Padding="2"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Center"
+                                            Background="White"
+                                            BorderBrush="Black"
+                                            BorderThickness="1" />
+
+                                    <Track Name="PART_Track"
+                                           Grid.Row="1"
+                                           Grid.Column="1"
+                                           Width="{TemplateBinding Width}"
+                                           Height="{TemplateBinding Height}"
+                                           HorizontalAlignment="Stretch"
+                                           VerticalAlignment="Center">
+
+                                        <Track.Thumb>
+
+                                            <Thumb>
+
+                                                <Thumb.Style>
+
+                                                    <Style TargetType="Thumb">
+
+                                                        <Setter Property="SnapsToDevicePixels"
+                                                                Value="true" />
+
+                                                        <Setter Property="OverridesDefaultStyle"
+                                                                Value="false" />
+
+                                                        <Setter Property="Height"
+                                                                Value="18" />
+
+                                                        <Setter Property="Width"
+                                                                Value="18" />
+
+                                                        <Setter Property="Template">
+
+                                                            <Setter.Value>
+
+                                                                <ControlTemplate TargetType="Thumb">
+
+                                                                    <Ellipse Name="Ellipse"
+                                                                             Fill="#FF004D"
+                                                                             Stroke="Black"
+                                                                             StrokeThickness="1" />
+
+                                                                    <ControlTemplate.Triggers>
+
+                                                                        <Trigger Property="IsMouseOver"
+                                                                                 Value="True">
+
+                                                                            <Setter TargetName="Ellipse"
+                                                                                    Property="Fill"
+                                                                                    Value="#FAEF5D" />
+
+                                                                        </Trigger>
+
+                                                                        <Trigger Property="IsEnabled"
+                                                                                 Value="false">
+
+                                                                            <Setter TargetName="Ellipse"
+                                                                                    Property="Fill"
+                                                                                    Value="Gray" />
+
+                                                                        </Trigger>
+
+                                                                    </ControlTemplate.Triggers>
+
+                                                                </ControlTemplate>
+
+                                                            </Setter.Value>
+
+                                                        </Setter>
+
+                                                    </Style>
+
+                                                </Thumb.Style>
+
+                                            </Thumb>
+
+                                        </Track.Thumb>
+
+                                    </Track>
+
+                                </Grid>
+
+                            </ControlTemplate>
+
+                        </Setter.Value>
+
+                    </Setter>
+
+                </Style>
+
+            </Slider.Style>
+
+        </Slider>
+
+        <Grid Grid.Row="1">
+
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition />
+
+                <ColumnDefinition />
+
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Margin="3"
+                       Padding="5,0,5,2"
+                       Foreground="White">
+
+                <TextBlock.Inlines>
+
+                    <Run x:Name="_currentTime"
+                         Text="00:00:00" />
+
+                    <Run x:Name="_timeSeparator"
+                         Text="/" />
+
+                    <Run x:Name="_endTime"
+                         Text="00:00:00" />
+
+                </TextBlock.Inlines>
+
+            </TextBlock>
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>
