@@ -116,6 +116,13 @@ namespace DownloaderApp.MVVM.ViewModel
 
         protected override bool TextChangedCommandCanExecute(object? parameter)
         {
+            if (!_instagramModel.Api.IsUserAuthenticated)
+            {
+                InfoSignState = InfoSignState.Bad;
+                InfoSignToolTip = "User not logged";
+                return false;
+            }
+
             if (string.IsNullOrWhiteSpace(InputText) || !InstagramModel.Regex.IsMatch(InputText))
             {
                 InfoSignState = InfoSignState.Bad;

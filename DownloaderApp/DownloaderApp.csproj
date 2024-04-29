@@ -26,6 +26,7 @@
   <ItemGroup>
     <None Update="account_session.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  <CopyToPublishDirectory>Never</CopyToPublishDirectory>
 	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
     <None Update="ffmpeg.exe">
