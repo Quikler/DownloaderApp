@@ -2,6 +2,7 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:local="clr-namespace:DownloaderApp.MVVM.View"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:uc="clr-namespace:DownloaderApp.UserControls"
@@ -18,9 +19,21 @@
 
     </Page.DataContext>
 
-    <StackPanel>
+    <Grid>
 
-        <Grid>
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="Auto" />
+
+            <RowDefinition Height="Auto" />
+
+            <RowDefinition Height="Auto" />
+
+            <RowDefinition Height="*" />
+
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
 
             <uc:InfoSign Width="64"
                          Height="64"
@@ -118,7 +131,7 @@
 
         </Grid>
 
-        <uc:SearchTextBox xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        <uc:SearchTextBox Grid.Row="1"
                           Padding="16,8"
                           BorderBrush="#FF004D"
                           BorderThickness="4"
@@ -133,9 +146,19 @@
                           Text="{Binding InputText, Mode=TwoWay}"
                           TextChangedCommand="{Binding TextChangedCommand}" />
 
-        <Grid>
+        <Grid Grid.Row="2">
 
-            <TextBlock HorizontalAlignment="Left"
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="Auto" />
+
+                <ColumnDefinition Width="*" />
+
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       Padding="0,0,0,2"
+                       HorizontalAlignment="Left"
                        VerticalAlignment="Center"
                        FontSize="16"
                        FontWeight="Medium"
@@ -143,17 +166,19 @@
                        Text="{Binding InfoText}"
                        Typography.Capitals="AllSmallCaps" />
 
-            <uc:DirectoryDialog Margin="0,16"
+            <uc:DirectoryDialog Grid.Column="1"
+                                Margin="16,16,0,16"
                                 HorizontalAlignment="Right"
                                 Background="#1D2B53"
                                 FontSize="16"
                                 FontWeight="Medium"
                                 Foreground="White"
+                                PathMaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
                                 SelectedPath="{Binding SelectedPath, Mode=OneWayToSource}" />
 
         </Grid>
 
-        <uc:MediaCarousel Height="350"
+        <uc:MediaCarousel Grid.Row="3"
                           VerticalAlignment="Stretch"
                           Background="Black"
                           BorderBrush="Black"
@@ -163,12 +188,12 @@
                           ButtonHoverBackground="#1C326E"
                           IsCheckBoxChecked="{Binding IsCheckBoxChecked, Mode=TwoWay}"
                           IsSourceSelectable="True"
-                          SelectableCollection="{Binding SelectableCollection, Mode=OneWayToSource}"
                           MenuBackground="White"
                           MenuForeground="Black"
                           MenuHoverColor="LightGray"
+                          SelectableCollection="{Binding SelectableCollection, Mode=OneWayToSource}"
                           Source="{Binding MediaSource}" />
 
-    </StackPanel>
+    </Grid>
 
 </Page>

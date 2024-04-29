@@ -10,11 +10,19 @@
 
             <ResourceDictionary.MergedDictionaries>
 
+                <ResourceDictionary Source="Themes/Colors.xaml" />
+
                 <ResourceDictionary Source="Themes/MenuButtonTheme.xaml" />
 
                 <ResourceDictionary Source="Themes/TextBoxTheme.xaml" />
 
                 <ResourceDictionary Source="Themes/ComboBoxTheme.xaml" />
+
+                <ResourceDictionary Source="Themes/TitleBarButtonTheme.xaml" />
+
+                <ResourceDictionary Source="Themes/PlaceholderTextBoxTheme.xaml" />
+
+                <ResourceDictionary Source="Themes/MenuItemTheme.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
 

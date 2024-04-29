@@ -10,27 +10,25 @@ using System.Windows.Controls;
 
 namespace DownloaderApp.MVVM.Model
 {
-    internal class InstagramModel : InputOutputModel
+    internal class InstagramModel
     {
-        private static readonly string AccountSessionFilePath = $"{AppContext.BaseDirectory}account_session.dat";
+        public static string AccountSessionFilePath { get; } = $"{AppContext.BaseDirectory}account_session.dat";
+        public static Regex Regex { get; } = new Regex(
+                @"(?:https?://)(?:www\.)instagram\.com/(?:p|reel|reels)/([a-zA-Z0-9_-]{1,11})(\/\?\S*)?\/?$",
+                RegexOptions.IgnoreCase);
 
-        public InstaService InstagramService { get; }
-        public IInstaApi Api { get; }
-        public Regex Regex { get; }
+        public InstaService InstagramService { get; set; }
+        public IInstaApi Api { get; set; }
         public InstaMediaInfos? Infos { get; set; }
 
         public InstagramModel()
         {
-            Regex = new Regex(
-                @"(?:https?://)(?:www\.)instagram\.com/(?:p|reel|reels)/([a-zA-Z0-9_-]{1,11})(\/\?\S*)?\/?$",
-                RegexOptions.IgnoreCase);
-
             Api = InstaApiBuilder
                 .CreateBuilder()
                 .SetSessionHandler(new FileSessionHandler { FilePath = AccountSessionFilePath })
                 .Build();
 
-            Api.SessionHandler.Load();
+            Api.SessionHandler.Load(false);
 
             InstagramService = new InstaService(Api);
         }

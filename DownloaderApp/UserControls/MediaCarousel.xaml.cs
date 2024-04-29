@@ -219,7 +219,7 @@ namespace DownloaderApp.UserControls
         {
             SelectableCollection.Clear();
             IsCheckBoxChecked = false;
-        }, obj => SelectableCollection?.Count == Source?.Length);
+        });
 
         public ICommand CheckBoxSelectableCommand => new RelayCommand(obj =>
         {
@@ -229,11 +229,13 @@ namespace DownloaderApp.UserControls
                 SelectableCollection.Remove(SelectedMedia!);
         }, obj => SelectedMedia is not null);
 
-        private static readonly ProcessStartInfo s_previewLinkProcessStartInfo = new() { UseShellExecute = true };
         public ICommand PreviewLinkNavigateCommand => new RelayCommand(obj =>
         {
-            s_previewLinkProcessStartInfo.FileName = (string)obj!;
-            Process.Start(s_previewLinkProcessStartInfo)?.Dispose();
+            Process.Start(new ProcessStartInfo 
+            { 
+                UseShellExecute = true, 
+                FileName = (string)obj! 
+            })?.Dispose();
         }, obj => Source is not null && SelectedMedia is not null && PreviewLink.CommandParameter is not null);
         #endregion
 

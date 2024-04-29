@@ -482,3 +482,8 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+CustomActions/
+SetupMsi/
+SetupBootstrapper/
+account_session.dat

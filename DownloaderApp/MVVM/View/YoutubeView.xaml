@@ -19,9 +19,21 @@
 
     </Page.DataContext>
 
-    <StackPanel>
+    <Grid>
 
-        <Grid>
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="Auto" />
+
+            <RowDefinition Height="Auto" />
+
+            <RowDefinition Height="Auto" />
+
+            <RowDefinition Height="*" />
+
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
 
             <uc:InfoSign Width="64"
                          Height="64"
@@ -100,7 +112,7 @@
 
                                         <DrawingImage.Drawing>
 
-                                            <DrawingGroup ClipGeometry="{Binding ClipGeometry}">
+                                            <DrawingGroup>
 
                                                 <DrawingGroup Opacity="1">
 
@@ -135,7 +147,7 @@
 
         </Grid>
 
-        <uc:SearchTextBox xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        <uc:SearchTextBox Grid.Row="1"
                           Padding="16,8"
                           BorderBrush="#FF004D"
                           BorderThickness="4"
@@ -150,9 +162,18 @@
                           Text="{Binding InputText, Mode=TwoWay}"
                           TextChangedCommand="{Binding TextChangedCommand}" />
 
-        <Grid>
+        <Grid Grid.Row="2">
 
-            <TextBlock HorizontalAlignment="Left"
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="Auto" />
+
+                <ColumnDefinition Width="*" />
+
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       Padding="0,0,0,2"
                        VerticalAlignment="Center"
                        FontSize="16"
                        FontWeight="Medium"
@@ -160,18 +181,19 @@
                        Text="{Binding InfoText}"
                        Typography.Capitals="AllSmallCaps" />
 
-            <uc:DirectoryDialog Margin="0,16"
+            <uc:DirectoryDialog Grid.Column="1"
+                                Margin="16,16,0,16"
                                 HorizontalAlignment="Right"
                                 Background="#1D2B53"
                                 FontSize="16"
                                 FontWeight="Medium"
                                 Foreground="White"
+                                PathMaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
                                 SelectedPath="{Binding SelectedPath, Mode=OneWayToSource}" />
 
         </Grid>
 
-        <uc:MediaCarousel Height="350"
-                          VerticalAlignment="Stretch"
+        <uc:MediaCarousel Grid.Row="3"
                           Background="Black"
                           BorderBrush="Black"
                           BorderThickness="1"
@@ -183,6 +205,7 @@
                           MenuForeground="Black"
                           MenuHoverColor="LightGray"
                           Source="{Binding MediaSource}" />
-    </StackPanel>
+
+    </Grid>
 
 </Page>

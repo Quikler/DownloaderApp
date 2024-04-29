@@ -24,6 +24,15 @@ namespace DownloaderApp.UserControls
             FileName = "select" // Filename will then be "select.this.directory"
         };
 
+        public int PathMaxWidth
+        {
+            get { return (int)GetValue(PathMaxWidthProperty); }
+            set { SetValue(PathMaxWidthProperty, value); }
+        }
+
+        public static readonly DependencyProperty PathMaxWidthProperty =
+            DependencyProperty.Register("PathMaxWidth", typeof(int), typeof(DirectoryDialog), new PropertyMetadata(100));
+
         public string SelectedPath
         {
             get { return (string)GetValue(SelectedPathProperty); }

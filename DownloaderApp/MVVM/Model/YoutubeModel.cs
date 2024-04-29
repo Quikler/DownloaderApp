@@ -5,9 +5,11 @@ using YTDownloader.CLasses.Models;
 
 namespace DownloaderApp.MVVM.Model
 {
-    internal class YoutubeModel : InputOutputModel
+    internal class YoutubeModel
     {
-        public Regex Regex { get; }
+        public static  Regex Regex { get; } = new Regex(
+                @"^(http(s)?://)?(www\.)?(youtube\.com/watch\?v=|youtu.be/|youtube.com/shorts/)([a-zA-Z0-9\-_]{11})((\?|&)\S*)?$",
+                RegexOptions.IgnoreCase);
         public YTSimpleInfo? Info { get; set; }
 
         private static readonly Func<StreamManifest, IStreamInfo> s_audio =
@@ -15,13 +17,6 @@ namespace DownloaderApp.MVVM.Model
 
         private static readonly Func<StreamManifest, IStreamInfo> s_muxed =
             ms => ms.GetMuxedStreams().GetWithHighestVideoQuality();
-
-        public YoutubeModel()
-        {
-            Regex = new Regex(
-                @"^(http(s)?://)?(www\.)?(youtube\.com/watch\?v=|youtu.be/|youtube.com/shorts/)([a-zA-Z0-9\-_]{11})((\?|&)\S*)?$",
-                RegexOptions.IgnoreCase);
-        }
 
         public async Task<DownloadedMediaInfo> DownloadMediaAsync(string destinationFolder, bool isAudio)
         {

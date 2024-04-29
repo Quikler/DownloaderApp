@@ -12,17 +12,19 @@
 
         <Grid.ColumnDefinitions>
 
-            <ColumnDefinition Width="Auto" />
-
             <ColumnDefinition Width="*" />
+
+            <ColumnDefinition Width="Auto" />
 
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Column="0"
+                   MaxWidth="{Binding RelativeSource={RelativeSource AncestorType=local:DirectoryDialog}, Path=PathMaxWidth}"
                    VerticalAlignment="Center"
                    FontSize="12"
                    Foreground="LightGray"
-                   Text="{Binding RelativeSource={RelativeSource AncestorType=local:DirectoryDialog}, Path=SelectedPath}" />
+                   Text="{Binding RelativeSource={RelativeSource AncestorType=local:DirectoryDialog}, Path=SelectedPath}"
+                   TextTrimming="CharacterEllipsis" />
 
         <Button Grid.Column="1"
                 Margin="4,0,0,0"

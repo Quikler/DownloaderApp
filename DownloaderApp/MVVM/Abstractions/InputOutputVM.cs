@@ -6,12 +6,10 @@ using System.Windows.Input;
 
 namespace DownloaderApp.MVVM.Abstractions
 {
-    internal abstract class InputOutputVM<M> : BaseVM, IInputOutputVM where M : IInputOutputModel
+    internal abstract class InputOutputVM : BaseVM, IInputOutputVM
     {
         public abstract ICommand TextChangedCommand { get; }
         public abstract ICommand ButtonClickCommand { get; }
-
-        protected abstract M Model { get; }
 
         protected abstract void TextChangedCommandExecute(object? parameter);
         protected abstract bool TextChangedCommandCanExecute(object? parameter);
@@ -19,92 +17,99 @@ namespace DownloaderApp.MVVM.Abstractions
         protected abstract void ClickCommandExecute(object? parameter);
         protected abstract bool ClickCommandCanExecute(object? parameter);
 
+        private string? _infoText;
         public virtual string? InfoText
         {
-            get { return Model.InfoText; }
+            get { return _infoText; }
             set
             {
-                if (Model.InfoText != value)
+                if (_infoText != value)
                 {
-                    Model.InfoText = value;
+                    _infoText = value;
                     OnPropertyChanged();
                 }
             }
         }
 
+        private string? _inputText;
         public virtual string? InputText
         {
-            get { return Model.InputText; }
+            get { return _inputText; }
             set
             {
-                if (Model.InputText != value)
+                if (_inputText != value)
                 {
-                    Model.InputText = value;
+                    _inputText = value;
                     OnPropertyChanged();
                 }
             }
         }
 
+        private string? _selectedPath;
         public virtual string? SelectedPath
         {
-            get { return Model.SelectedPath; }
+            get { return _selectedPath; }
             set
             {
-                if (Model.SelectedPath != value)
+                if (_selectedPath != value)
                 {
-                    Model.SelectedPath = value;
+                    _selectedPath = value;
                     OnPropertyChanged();
                 }
             }
         }
 
+        private MediaElement[]? _mediaSource;
         public virtual MediaElement[]? MediaSource
         {
-            get { return Model.MediaSource; }
+            get { return _mediaSource; }
             set
             {
-                if (Model.MediaSource != value)
+                if (_mediaSource != value)
                 {
-                    Model.MediaSource = value;
+                    _mediaSource = value;
                     OnPropertyChanged();
                 }
             }
         }
 
+        private InfoSignState _infoSignState;
         public virtual InfoSignState InfoSignState
         {
-            get { return Model.InfoSignState; }
+            get { return _infoSignState; }
             set
             {
-                if (Model.InfoSignState != value)
+                if (_infoSignState != value)
                 {
-                    Model.InfoSignState = value;
+                    _infoSignState = value;
                     OnPropertyChanged();
                 }
             }
         }
 
+        private string? _infoSignToolTip;
         public virtual string? InfoSignToolTip
         {
-            get { return Model.InfoSignToolTip; }
+            get { return _infoSignToolTip; }
             set
             {
-                if (Model.InfoSignToolTip != value)
+                if (_infoSignToolTip != value)
                 {
-                    Model.InfoSignToolTip = value;
+                    _infoSignToolTip = value;
                     OnPropertyChanged();
                 }
             }
         }
 
+        private bool _isDownloadButtonEnabled;
         public virtual bool IsDownloadButtonEnabled
         {
-            get { return Model.IsDownloadButtonEnabled; }
+            get { return _isDownloadButtonEnabled; }
             set
             {
-                if (Model.IsDownloadButtonEnabled != value)
+                if (_isDownloadButtonEnabled != value)
                 {
-                    Model.IsDownloadButtonEnabled = value;
+                    _isDownloadButtonEnabled = value;
                     OnPropertyChanged();
                 }
             }

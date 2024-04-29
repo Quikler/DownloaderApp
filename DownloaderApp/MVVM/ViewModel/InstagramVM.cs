@@ -4,24 +4,17 @@ using DownloaderApp.UserControls;
 using DownloaderApp.Utils;
 using InstagramApiSharp.Classes;
 using InstagramService.Classes.Collections;
-using InstagramService.Classes.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace DownloaderApp.MVVM.ViewModel
 {
-    internal class InstagramVM : InputOutputVM<InstagramModel>
+    internal class InstagramVM : InputOutputVM
     {
         public override ICommand TextChangedCommand { get; }
         public override ICommand ButtonClickCommand { get; }
 
-        protected override InstagramModel Model { get; }
+        private readonly InstagramModel _instagramModel;
 
         private List<MediaElement> _selectableCollection = null!;
         public List<MediaElement> SelectableCollection
@@ -51,12 +44,46 @@ namespace DownloaderApp.MVVM.ViewModel
             }
         }
 
+        private int _selectedIndex;
+        public int SelectedIndex
+        {
+            get { return _selectedIndex; }
+            set
+            {
+                if (_selectedIndex != value)
+                {
+                    _selectedIndex = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public InstagramVM()
         {
-            Model = new InstagramModel() { InfoText = "Instagram" };
+            InfoText = "Instagram";
 
             TextChangedCommand = new RelayCommand(TextChangedCommandExecute, TextChangedCommandCanExecute);
             ButtonClickCommand = new RelayCommand(ClickCommandExecute, ClickCommandCanExecute);
+
+            _instagramModel = new InstagramModel();
+
+            Mediator.IInstaApiChanged += (sender, e) =>
+            {
+                if (sender != this)
+                    _instagramModel.Api = e.Api;
+            };
+            Mediator.NotifyIInstaApiChanged(this, new InstaApiEventArgs(_instagramModel.Api));
+
+            if (_instagramModel.Api.IsUserAuthenticated)
+            {
+                InfoSignState = InfoSignState.Success;
+                InfoSignToolTip = "User logged";
+            }
+            else
+            {
+                InfoSignState = InfoSignState.Bad;
+                InfoSignToolTip = "User not logged";
+            }
         }
 
         protected override async void TextChangedCommandExecute(object? parameter)
@@ -65,7 +92,7 @@ namespace DownloaderApp.MVVM.ViewModel
             Util.AnimatedWaiting(InfoText, "Loading", 100,
                 cancellationTokenSource.Token, new Progress<string?>(str => InfoText = str));
 
-            var infoResult = await Model.InstagramService.MediaHelper.GetInfosAsync(InputText);
+            var infoResult = await _instagramModel.InstagramService.MediaHelper.GetInfosAsync(InputText);
             if (!infoResult.Succeeded)
             {
                 InfoSignState = InfoSignState.Bad;
@@ -74,7 +101,7 @@ namespace DownloaderApp.MVVM.ViewModel
                 return;
             }
 
-            var infos = Model.Infos = infoResult.Value;
+            var infos = _instagramModel.Infos = infoResult.Value;
             int infosCount = infos.Count();
 
             MediaElement[] source = new MediaElement[infosCount];
@@ -89,14 +116,14 @@ namespace DownloaderApp.MVVM.ViewModel
 
         protected override bool TextChangedCommandCanExecute(object? parameter)
         {
-            if (string.IsNullOrWhiteSpace(InputText) || !Model.Regex.IsMatch(InputText))
+            if (string.IsNullOrWhiteSpace(InputText) || !InstagramModel.Regex.IsMatch(InputText))
             {
                 InfoSignState = InfoSignState.Bad;
                 InfoSignToolTip = "Input doesn't match a regex";
                 return false;
             }
 
-            if (Model.Infos is not null && InputText.Contains(Model.Infos.First().InitialUri))
+            if (_instagramModel.Infos is not null && InputText.Contains(_instagramModel.Infos.First().InitialUri))
             {
                 InfoSignState = InfoSignState.Success;
                 InfoSignToolTip = "Specified media already in preview";
@@ -105,7 +132,7 @@ namespace DownloaderApp.MVVM.ViewModel
 
             InfoSignState = InfoSignState.Success;
             InfoSignToolTip = "Input matches a regex";
-            IsDownloadButtonEnabled = true;
+
             return IsDownloadButtonEnabled = true;
         }
 
@@ -117,8 +144,8 @@ namespace DownloaderApp.MVVM.ViewModel
 
             IsDownloadButtonEnabled = false;
             IResult<InstaMediaStreams> instaMediaStreamsResult = SelectableCollection.Count != MediaSource?.Length ?
-                await Model.GetStreamsFromAsync(SelectableCollection) :
-                await Model.InstagramService.StreamTaker.GetMediaStreamsAsync(Model.Infos);
+                await _instagramModel.GetStreamsFromAsync(SelectableCollection) :
+                await _instagramModel.InstagramService.StreamTaker.GetMediaStreamsAsync(_instagramModel.Infos);
 
             if (!instaMediaStreamsResult.Succeeded)
             {
@@ -128,7 +155,7 @@ namespace DownloaderApp.MVVM.ViewModel
                 return;
             }
 
-            var finalResult = await Model.InstagramService.MediaHelper
+            var finalResult = await _instagramModel.InstagramService.MediaHelper
                 .DownloadMediasAsync(instaMediaStreamsResult.Value, SelectedPath);
 
             if (finalResult.Succeeded)
@@ -149,7 +176,7 @@ namespace DownloaderApp.MVVM.ViewModel
 
         protected override bool ClickCommandCanExecute(object? parameter)
         {
-            if (string.IsNullOrWhiteSpace(SelectedPath) || Model.Infos is null)
+            if (string.IsNullOrWhiteSpace(SelectedPath) || _instagramModel.Infos is null || SelectableCollection.Count <= 0)
                 return false;
 
             return true;
