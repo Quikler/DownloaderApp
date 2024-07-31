@@ -9,7 +9,7 @@ using System.Windows.Data;
 
 namespace DownloaderApp.Utils
 {
-    internal class FontSizeConverter : IValueConverter
+    public class FontSizeConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

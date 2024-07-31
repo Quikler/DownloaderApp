@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using System.Windows.Controls;
-using System.Windows.Threading;
 
 namespace DownloaderApp.Utils
 {
-    internal static class Util
+    public static class Util
     {
         public static bool HasTimeSpan(this MediaElement element) => element.NaturalDuration.HasTimeSpan;
 

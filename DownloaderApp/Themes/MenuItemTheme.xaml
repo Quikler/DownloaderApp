@@ -406,6 +406,18 @@
                         Property="BorderBrush"
                         Value="{StaticResource MenuItem.Highlight.Border}" />
             </Trigger>
+            <DataTrigger Binding="{Binding ElementName=PART_Popup, Path=IsOpen}"
+                         Value="True">
+                <Setter TargetName="templateRoot"
+                        Property="TextBlock.FontWeight"
+                        Value="Medium" />
+                <Setter TargetName="templateRoot"
+                        Property="Background"
+                        Value="{StaticResource MenuItem.Highlight.Background}" />
+                <Setter TargetName="templateRoot"
+                        Property="BorderBrush"
+                        Value="{StaticResource MenuItem.Highlight.Border}" />
+            </DataTrigger>
             <Trigger Property="IsEnabled"
                      Value="False">
                 <Setter TargetName="templateRoot"
@@ -504,7 +516,7 @@
                         Property="Visibility"
                         Value="Collapsed" />
             </Trigger>
-            <Trigger Property="IsHighlighted"
+            <Trigger Property="IsMouseOver"
                      Value="True">
                 <Setter TargetName="templateRoot"
                         Property="TextBlock.FontWeight"
@@ -643,11 +655,6 @@
                                                Height="{Binding ActualHeight, ElementName=SubMenuBorder}"
                                                Fill="{Binding Background, ElementName=SubMenuBorder}" />
                                 </Canvas>
-
-                                <!--<Rectangle Width="1"
-                                           Margin="29,2,0,2"
-                                           HorizontalAlignment="Left"
-                                           Fill="{StaticResource Brush602553}" />-->
 
                                 <ItemsPresenter x:Name="ItemsPresenter"
                                                 Grid.IsSharedSizeScope="true"

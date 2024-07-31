@@ -8,6 +8,9 @@ EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "SetupMsi", "SetupMsi\SetupMsi.wixproj", "{5FD92B10-FF41-4A83-AB85-18115AD78B6A}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "SetupBootstrapper", "SetupBootstrapper\SetupBootstrapper.wixproj", "{1C1513D8-DF19-40AC-B8B1-D4866090E460}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5FD92B10-FF41-4A83-AB85-18115AD78B6A} = {5FD92B10-FF41-4A83-AB85-18115AD78B6A}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomActions", "CustomActions\CustomActions.csproj", "{E54EA86F-7FA7-40EC-B918-DA66CB5BDE45}"
 EndProject

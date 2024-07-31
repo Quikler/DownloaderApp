@@ -5,11 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace DownloaderApp.MVVM.Abstractions.Interfaces
 {
     internal interface IInputOutputVM
     {
+        public abstract ICommand TextChangedCommand { get; }
+        public abstract ICommand ButtonClickCommand { get; }
+
         public InfoSignState InfoSignState { get; set; }
         public string? InfoSignToolTip { get; set; }
         public string? InfoText { get; set; }

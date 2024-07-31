@@ -7,10 +7,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:view="clr-namespace:DownloaderApp.MVVM.View"
         xmlns:vm="clr-namespace:DownloaderApp.MVVM.ViewModel"
-        x:Name="_mainWindow"
+        Title="DownloaderApp"
         Width="700"
         Height="700"
-        MinWidth="580"
+        MinWidth="640"
         MinHeight="580"
         AllowsTransparency="False"
         ResizeMode="CanResize"
@@ -19,27 +19,6 @@
         WindowStartupLocation="CenterScreen"
         WindowStyle="SingleBorderWindow"
         mc:Ignorable="d">
-    <Window.Resources>
-
-        <DataTemplate DataType="{x:Type vm:YoutubeVM}">
-
-            <view:YoutubeView />
-
-        </DataTemplate>
-
-        <DataTemplate DataType="{x:Type vm:InstagramVM}">
-
-            <view:InstagramView />
-
-        </DataTemplate>
-
-        <DataTemplate DataType="{x:Type vm:LoginVM}">
-
-            <view:LoginView />
-
-        </DataTemplate>
-
-    </Window.Resources>
 
     <WindowChrome.WindowChrome>
 
@@ -55,7 +34,6 @@
         <vm:MainVM />
 
     </Window.DataContext>
-
 
     <Border>
 
@@ -277,6 +255,10 @@
                                       Command="{Binding LoginMenuItemCommand}"
                                       Header="Login" />
 
+                            <!--<MenuItem Padding="0,12"
+                                      Command="{Binding nope}"
+                                      Header="Challenge" />-->
+
                             <MenuItem Padding="0,12"
                                       Command="{Binding InstagramMenuItemCommand}"
                                       Header="Downloader" />
@@ -284,22 +266,7 @@
                         </MenuItem>
 
                     </Menu>
-
-                    <!--<RadioButton Height="50"
-                                 Command="{Binding YoutubeMenuButtonCommand}"
-                                 Content="Youtube"
-                                 Cursor="Hand"
-                                 FontSize="18"
-                                 IsChecked="True"
-                                 Style="{StaticResource MenuButtonTheme}" />
-
-                    <RadioButton Height="50"
-                                 Command="{Binding InstagramMenuButtonCommand}"
-                                 Content="Instargam"
-                                 Cursor="Hand"
-                                 FontSize="18"
-                                 Style="{StaticResource MenuButtonTheme}" />-->
-
+                    
                 </StackPanel>
 
                 <Frame Grid.Row="1"

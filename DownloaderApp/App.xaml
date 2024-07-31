@@ -12,8 +12,6 @@
 
                 <ResourceDictionary Source="Themes/Colors.xaml" />
 
-                <ResourceDictionary Source="Themes/MenuButtonTheme.xaml" />
-
                 <ResourceDictionary Source="Themes/TextBoxTheme.xaml" />
 
                 <ResourceDictionary Source="Themes/ComboBoxTheme.xaml" />

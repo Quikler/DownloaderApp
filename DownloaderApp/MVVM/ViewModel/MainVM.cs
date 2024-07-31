@@ -1,11 +1,9 @@
 ﻿using DownloaderApp.MVVM.Abstractions;
 using DownloaderApp.MVVM.View;
 using DownloaderApp.Utils;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media.Animation;
 
 namespace DownloaderApp.MVVM.ViewModel
@@ -16,14 +14,7 @@ namespace DownloaderApp.MVVM.ViewModel
         public Page CurrentPage
         {
             get { return _currentPage; }
-            set
-            {
-                if (_currentPage != value)
-                {
-                    _currentPage = value;
-                    OnPropertyChanged();
-                }
-            }
+            set { RaiseAndSetIfChanged(ref _currentPage, value); }
         }
 
         public YoutubeView YoutubeView { get; }

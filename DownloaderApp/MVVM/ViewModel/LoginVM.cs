@@ -6,12 +6,6 @@ using InstagramApiSharp.API;
 using InstagramApiSharp.API.Builder;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.SessionHandlers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 
 namespace DownloaderApp.MVVM.ViewModel
@@ -20,32 +14,20 @@ namespace DownloaderApp.MVVM.ViewModel
     {
         public ICommand LoginButtonCommand { get; }
 
-        private readonly LoginModel _loginModel;
+        private IInstaApi? _api;
 
+        private string? _username;
         public string? Username
         {
-            get { return _loginModel.Username; }
-            set
-            {
-                if (value != _loginModel.Username)
-                {
-                    _loginModel.Username = value;
-                    OnPropertyChanged();
-                }
-            }
+            get { return _username; }
+            set { RaiseAndSetIfChanged(ref _username, value); }
         }
 
+        private string? _password;
         public string? Password
         {
-            get { return _loginModel.Password; }
-            set
-            {
-                if (value != _loginModel.Password)
-                {
-                    _loginModel.Password = value;
-                    OnPropertyChanged();
-                }
-            }
+            get { return _password; }
+            set { RaiseAndSetIfChanged(ref _password, value); }
         }
 
         public override ICommand TextChangedCommand => throw new NotImplementedException();
@@ -55,13 +37,11 @@ namespace DownloaderApp.MVVM.ViewModel
         {
             LoginButtonCommand = new RelayCommand(LoginButtonCommandExecute, LoginButtonCommandCanExecute);
 
-            _loginModel = new LoginModel();
-             
             Mediator.IInstaApiChanged += (sender, e) =>
             {
                 if (sender != this)
                 {
-                    _loginModel.Api = e.Api;
+                    _api = e.Api;
                     InfoText = e.Api.IsUserAuthenticated ? "Logged" : "Not logged";
                 }
             };
@@ -69,13 +49,22 @@ namespace DownloaderApp.MVVM.ViewModel
 
         private async void LoginButtonCommandExecute(object? parameter)
         {
+            if (_api is not null && _api.IsUserAuthenticated)
+            {
+                var mBoxResult = CustomMbox.ShowDialog("You already logged. Wanna proceed?",
+                    "Login", CustomMbox.CustomMboxButtons.YesNo);
+
+                if (mBoxResult != true)
+                    return;
+            }
+
             IInstaApi instaApi = InstaApiBuilder
                 .CreateBuilder()
                 .SetSessionHandler(new FileSessionHandler { FilePath = InstagramModel.AccountSessionFilePath })
                 .SetUser(new UserSessionData { UserName = Username, Password = Password })
                 .Build();
 
-            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            var cancellationTokenSource = new CancellationTokenSource();
             Util.AnimatedWaiting(InfoText, "Logging", 100,
                 cancellationTokenSource.Token, new Progress<string?>(str => InfoText = str));
 
@@ -85,23 +74,24 @@ namespace DownloaderApp.MVVM.ViewModel
             if (!loginResult.Succeeded)
             {
                 InfoSignState = InfoSignState.Bad;
-                InfoSignToolTip = loginResult.Info.ToString();
+                InfoSignToolTip = loginResult.Info.Message;
+                CustomMbox.ShowDialog(loginResult.Info.Message, "Login error");
                 return;
             }
 
             InfoSignState = InfoSignState.Success;
-            InfoSignToolTip = "The user has successfully logged in";
+            InfoSignToolTip = "User has successfully logged in";
             InfoText = "Logged";
 
             instaApi.SessionHandler.Save(false);
-            _loginModel.Api = instaApi;
+            _api = instaApi;
 
-            Mediator.NotifyIInstaApiChanged(this, new InstaApiEventArgs(_loginModel.Api));
+            Mediator.NotifyIInstaApiChanged(this, new InstaApiEventArgs(_api));
         }
 
         private bool LoginButtonCommandCanExecute(object? parameter)
         {
-            if (_loginModel.Api?.IsUserAuthenticated ?? false)
+            if (_api?.IsUserAuthenticated ?? false)
             {
                 InfoSignState = InfoSignState.Success;
                 InfoSignToolTip = "User logged";

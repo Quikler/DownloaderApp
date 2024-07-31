@@ -1,12 +1,9 @@
 ﻿using InstagramApiSharp.API;
 using InstagramApiSharp.API.Builder;
-using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.SessionHandlers;
 using InstagramService.Classes;
-using InstagramService.Classes.Collections;
 using InstagramService.Classes.Models;
 using System.Text.RegularExpressions;
-using System.Windows.Controls;
 
 namespace DownloaderApp.MVVM.Model
 {
@@ -19,7 +16,7 @@ namespace DownloaderApp.MVVM.Model
 
         public InstaService InstagramService { get; set; }
         public IInstaApi Api { get; set; }
-        public InstaMediaInfos? Infos { get; set; }
+        public IEnumerable<InstaMediaInfo>? Infos { get; set; }
 
         public InstagramModel()
         {
@@ -33,14 +30,17 @@ namespace DownloaderApp.MVVM.Model
             InstagramService = new InstaService(Api);
         }
 
-        public async Task<IResult<InstaMediaStreams>> GetStreamsFromAsync(IEnumerable<MediaElement> selectableCollection)
+        /*public async Task<IResult<InstaMediaStreams>?> GetStreamsFromAsync(IEnumerable<MediaElement> selectableCollection)
         {
             // grabing all medias that has been selected
-            IEnumerable<InstaMediaInfo> selectedMedias = Infos!
+            IEnumerable<InstaMediaInfo>? selectedMedias = Infos?
                 .Where(info => selectableCollection.Any(m => m.Source.AbsoluteUri == info.Uri));
 
+            if (selectedMedias == null)
+                return null;
+
             int selectedSize = selectedMedias.Count();
-            InstaMediaInfos selectedMediaInfos = new(selectedSize, Infos!.Media);
+            InstaMediaInfos selectedMediaInfos = new(selectedSize, Infos?.Media);
             for (int i = 0; i < selectedSize; i++)
             {
                 InstaMediaInfo current = selectedMedias.ElementAt(i);
@@ -48,6 +48,6 @@ namespace DownloaderApp.MVVM.Model
             }
 
             return await InstagramService.StreamTaker.GetMediaStreamsAsync(selectedMediaInfos);
-        }
+        }*/
     }
 }

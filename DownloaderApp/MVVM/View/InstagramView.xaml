@@ -66,14 +66,11 @@
 
                                     <GeometryDrawing.Brush>
 
-                                        <LinearGradientBrush StartPoint="0,0"
-                                                             EndPoint="1,0">
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
 
-                                            <GradientStop Offset=".45"
-                                                          Color="#FF004D" />
+                                            <GradientStop Offset=".45" Color="#FF004D" />
 
-                                            <GradientStop Offset="1"
-                                                          Color="#FAEF5D" />
+                                            <GradientStop Offset="1" Color="#FAEF5D" />
 
                                         </LinearGradientBrush>
 
@@ -85,14 +82,11 @@
 
                                     <GeometryDrawing.Brush>
 
-                                        <LinearGradientBrush StartPoint="0,0"
-                                                             EndPoint="1,0">
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
 
-                                            <GradientStop Offset=".45"
-                                                          Color="#FF004D" />
+                                            <GradientStop Offset=".45" Color="#FF004D" />
 
-                                            <GradientStop Offset="1"
-                                                          Color="#FAEF5D" />
+                                            <GradientStop Offset="1" Color="#FAEF5D" />
 
                                         </LinearGradientBrush>
 
@@ -104,14 +98,11 @@
 
                                     <GeometryDrawing.Brush>
 
-                                        <LinearGradientBrush StartPoint="0,0"
-                                                             EndPoint="1,0">
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
 
-                                            <GradientStop Offset=".45"
-                                                          Color="#FF004D" />
+                                            <GradientStop Offset=".45" Color="#FF004D" />
 
-                                            <GradientStop Offset="1"
-                                                          Color="#FAEF5D" />
+                                            <GradientStop Offset="1" Color="#FAEF5D" />
 
                                         </LinearGradientBrush>
 
@@ -174,7 +165,8 @@
                                 FontWeight="Medium"
                                 Foreground="White"
                                 PathMaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
-                                SelectedPath="{Binding SelectedPath, Mode=OneWayToSource}" />
+                                SelectedPath="{Binding SelectedPath, Mode=TwoWay}"
+                                SelectedPathCommand="{Binding SelectedPathCommand}" />
 
         </Grid>
 
@@ -186,7 +178,6 @@
                           ButtonBackground="#FAEF5D"
                           ButtonDisableBackground="#FF004D"
                           ButtonHoverBackground="#1C326E"
-                          IsCheckBoxChecked="{Binding IsCheckBoxChecked, Mode=TwoWay}"
                           IsSourceSelectable="True"
                           MenuBackground="White"
                           MenuForeground="Black"

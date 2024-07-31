@@ -21,98 +21,49 @@ namespace DownloaderApp.MVVM.Abstractions
         public virtual string? InfoText
         {
             get { return _infoText; }
-            set
-            {
-                if (_infoText != value)
-                {
-                    _infoText = value;
-                    OnPropertyChanged();
-                }
-            }
+            set { RaiseAndSetIfChanged(ref _infoText, value); }
         }
 
         private string? _inputText;
         public virtual string? InputText
         {
             get { return _inputText; }
-            set
-            {
-                if (_inputText != value)
-                {
-                    _inputText = value;
-                    OnPropertyChanged();
-                }
-            }
+            set { RaiseAndSetIfChanged(ref _inputText, value); }
         }
 
         private string? _selectedPath;
         public virtual string? SelectedPath
         {
             get { return _selectedPath; }
-            set
-            {
-                if (_selectedPath != value)
-                {
-                    _selectedPath = value;
-                    OnPropertyChanged();
-                }
-            }
+            set { RaiseAndSetIfChanged(ref _selectedPath, value); }
         }
 
         private MediaElement[]? _mediaSource;
         public virtual MediaElement[]? MediaSource
         {
             get { return _mediaSource; }
-            set
-            {
-                if (_mediaSource != value)
-                {
-                    _mediaSource = value;
-                    OnPropertyChanged();
-                }
-            }
+            set { RaiseAndSetIfChanged(ref _mediaSource, value); }
         }
 
         private InfoSignState _infoSignState;
         public virtual InfoSignState InfoSignState
         {
             get { return _infoSignState; }
-            set
-            {
-                if (_infoSignState != value)
-                {
-                    _infoSignState = value;
-                    OnPropertyChanged();
-                }
-            }
+            set { RaiseAndSetIfChanged(ref _infoSignState, value); }
         }
 
         private string? _infoSignToolTip;
         public virtual string? InfoSignToolTip
         {
             get { return _infoSignToolTip; }
-            set
-            {
-                if (_infoSignToolTip != value)
-                {
-                    _infoSignToolTip = value;
-                    OnPropertyChanged();
-                }
-            }
+            set { RaiseAndSetIfChanged(ref _infoSignToolTip, value); }
         }
 
         private bool _isDownloadButtonEnabled;
         public virtual bool IsDownloadButtonEnabled
         {
             get { return _isDownloadButtonEnabled; }
-            set
-            {
-                if (_isDownloadButtonEnabled != value)
-                {
-                    _isDownloadButtonEnabled = value;
-                    OnPropertyChanged();
-                }
-            }
+            set { RaiseAndSetIfChanged(ref _isDownloadButtonEnabled, value); }
         }
     }
 }

@@ -3,7 +3,7 @@ using DownloaderApp.MVVM.Model;
 using DownloaderApp.UserControls;
 using DownloaderApp.Utils;
 using InstagramApiSharp.Classes;
-using InstagramService.Classes.Collections;
+using InstagramService.Classes.Models;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -16,46 +16,13 @@ namespace DownloaderApp.MVVM.ViewModel
 
         private readonly InstagramModel _instagramModel;
 
+        public ICommand SelectedPathCommand { get; }
+
         private List<MediaElement> _selectableCollection = null!;
         public List<MediaElement> SelectableCollection
         {
             get { return _selectableCollection; }
-            set
-            {
-                if (_selectableCollection != value)
-                {
-                    _selectableCollection = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private bool _isCheckBoxChecked;
-        public bool IsCheckBoxChecked
-        {
-            get { return _isCheckBoxChecked; }
-            set
-            {
-                if (_isCheckBoxChecked != value)
-                {
-                    _isCheckBoxChecked = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private int _selectedIndex;
-        public int SelectedIndex
-        {
-            get { return _selectedIndex; }
-            set
-            {
-                if (_selectedIndex != value)
-                {
-                    _selectedIndex = value;
-                    OnPropertyChanged();
-                }
-            }
+            set { RaiseAndSetIfChanged(ref _selectableCollection, value); }
         }
 
         public InstagramVM()
@@ -84,15 +51,29 @@ namespace DownloaderApp.MVVM.ViewModel
                 InfoSignState = InfoSignState.Bad;
                 InfoSignToolTip = "User not logged";
             }
+
+            SelectedPathCommand = new RelayCommand(obj =>
+            {
+                if (!string.IsNullOrWhiteSpace(SelectedPath))
+                    CommonSettingsManager.ChangeToCommonSettings("instagramPath", SelectedPath);
+            });
+
+            SelectedPath = CommonSettingsManager.ReadFromCommonSettings("instagramPath");
         }
 
         protected override async void TextChangedCommandExecute(object? parameter)
         {
-            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            var cancellationTokenSource = new CancellationTokenSource();
             Util.AnimatedWaiting(InfoText, "Loading", 100,
                 cancellationTokenSource.Token, new Progress<string?>(str => InfoText = str));
 
-            var infoResult = await _instagramModel.InstagramService.MediaHelper.GetInfosAsync(InputText);
+            var infoResult = await _instagramModel.InstagramService.MediaProcessor.GetInfosAsync(InputText);
+
+            if (await AcceptChallangeIfRequired(infoResult))
+            {
+                infoResult = await _instagramModel.InstagramService.MediaProcessor.GetInfosAsync(InputText);
+            }
+
             if (!infoResult.Succeeded)
             {
                 InfoSignState = InfoSignState.Bad;
@@ -107,7 +88,7 @@ namespace DownloaderApp.MVVM.ViewModel
             MediaElement[] source = new MediaElement[infosCount];
             for (int i = 0; i < infosCount; i++)
             {
-                source[i] = new MediaElement { Source = new Uri(infos[i].Uri) };
+                source[i] = new MediaElement { Source = new Uri(infos.ElementAt(i).Uri) };
             }
 
             source.First().MediaOpened += (sender, e) => cancellationTokenSource.Cancel();
@@ -122,6 +103,8 @@ namespace DownloaderApp.MVVM.ViewModel
                 InfoSignToolTip = "User not logged";
                 return false;
             }
+
+            InputText = InputText?.Trim();
 
             if (string.IsNullOrWhiteSpace(InputText) || !InstagramModel.Regex.IsMatch(InputText))
             {
@@ -145,24 +128,36 @@ namespace DownloaderApp.MVVM.ViewModel
 
         protected async override void ClickCommandExecute(object? parameter)
         {
-            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            var cancellationTokenSource = new CancellationTokenSource();
             Util.AnimatedWaiting(InfoText, "Installing", 100,
                 cancellationTokenSource.Token, new Progress<string?>(str => InfoText = str));
 
             IsDownloadButtonEnabled = false;
-            IResult<InstaMediaStreams> instaMediaStreamsResult = SelectableCollection.Count != MediaSource?.Length ?
-                await _instagramModel.GetStreamsFromAsync(SelectableCollection) :
-                await _instagramModel.InstagramService.StreamTaker.GetMediaStreamsAsync(_instagramModel.Infos);
 
-            if (!instaMediaStreamsResult.Succeeded)
+            var filteredInfos = new List<InstaMediaInfo>();
+            foreach (var mediaElement in SelectableCollection)
+            {
+                foreach (var info in _instagramModel.Infos!)
+                {
+                    if (mediaElement is MediaElement media && media.Source.ToString().Contains(info.Uri))
+                    {
+                        filteredInfos.Add(info);
+                    }
+                }
+            }
+
+            IResult<IEnumerable<InstaMediaStream>> instaMediaStreamsResult =
+                await _instagramModel.InstagramService.StreamProcessor.GetMediaStreamsAsync(filteredInfos);
+
+            if (instaMediaStreamsResult is null || !instaMediaStreamsResult.Succeeded)
             {
                 InfoSignState = InfoSignState.Bad;
-                InfoSignToolTip = instaMediaStreamsResult.Info.ToString();
+                InfoSignToolTip = instaMediaStreamsResult?.Info.ToString() ?? "No streams has been found";
                 cancellationTokenSource.Cancel();
                 return;
             }
 
-            var finalResult = await _instagramModel.InstagramService.MediaHelper
+            var finalResult = await _instagramModel.InstagramService.MediaProcessor
                 .DownloadMediasAsync(instaMediaStreamsResult.Value, SelectedPath);
 
             if (finalResult.Succeeded)
@@ -187,6 +182,20 @@ namespace DownloaderApp.MVVM.ViewModel
                 return false;
 
             return true;
+        }
+
+        private async Task<bool> AcceptChallangeIfRequired<T>(IResult<T> result)
+        {
+            if (result.Info.NeedsChallenge)
+            {
+                var acceptResult = await _instagramModel.InstagramService.Api.AcceptChallengeAsync();
+                if (!acceptResult.Succeeded)
+                {
+                    return false;
+                }
+                return true;
+            }
+            return false;
         }
     }
 }

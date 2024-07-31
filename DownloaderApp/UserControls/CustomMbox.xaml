@@ -1,0 +1,238 @@
+﻿<Window x:Class="DownloaderApp.UserControls.CustomMbox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:DownloaderApp.UserControls"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Title="{Binding ElementName=caption, Path=Text, StringFormat=DownloaderApp - {0}}"
+        Width="300"
+        Height="200"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="SingleBorderWindow"
+        mc:Ignorable="d">
+
+    <WindowChrome.WindowChrome>
+
+        <WindowChrome CaptionHeight="1"
+                      CornerRadius="0"
+                      GlassFrameThickness="1"
+                      ResizeBorderThickness="4" />
+
+    </WindowChrome.WindowChrome>
+
+    <Grid>
+
+
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="32" />
+
+            <RowDefinition Height="*" />
+
+            <RowDefinition Height="Auto" />
+
+        </Grid.RowDefinitions>
+
+        <!--  Title bar  -->
+        <Grid Background="{StaticResource DarkBlueBrush}"
+              MouseLeftButtonDown="WindowPanel_MouseLeftButtonDown">
+
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition />
+
+                <ColumnDefinition />
+
+            </Grid.ColumnDefinitions>
+
+            <TextBlock x:Name="caption"
+                       Padding="16,0,0,0"
+                       VerticalAlignment="Center"
+                       Foreground="White"
+                       Text="{Binding RelativeSource={RelativeSource AncestorType=local:CustomMbox}, Path=Caption}" />
+
+            <StackPanel Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+
+                <Button Click="ExitButton_Click"
+                        Style="{StaticResource TitleBarButtonStyle}">
+
+                    <Button.Content>
+
+                        <Image Width="12"
+                               Height="12">
+
+                            <Image.Source>
+
+                                <DrawingImage>
+
+                                    <DrawingImage.Drawing>
+
+                                        <DrawingGroup ClipGeometry="M0,0 V300 H300 V0 H0 Z">
+
+                                            <DrawingGroup Opacity="1">
+
+                                                <DrawingGroup.ClipGeometry>
+
+                                                    <RectangleGeometry RadiusX="0"
+                                                                       RadiusY="0"
+                                                                       Rect="0,0,300,300" />
+
+                                                </DrawingGroup.ClipGeometry>
+
+                                                <DrawingGroup Opacity="1">
+
+                                                    <GeometryDrawing Brush="#fff"
+                                                                     Geometry="F1 M300,300z M0,0z M244.802,61.643C234.168,50.875 224.661,42.297 210.837,35.523 202.151,31.261 191.669,34.934 187.47,43.717 183.243,52.501 186.889,63.072 195.566,67.334 205.86,72.375 212.776,77.95 220.72,85.992 259.717,125.427 259.717,189.586 220.72,229.011 201.83,248.125 176.694,258.624 149.984,258.624 123.266,258.624 98.138,248.116 79.247,229.011 40.251,189.586 40.251,125.427 79.247,85.992 87.218,77.941 95.099,72.384 104.885,67.352 113.15,63.081 116.608,52.519 112.597,43.726 108.584,34.952 99.952,31.341 91.482,35.487 78.051,42.082 65.844,50.875 55.184,61.643 2.901,114.498 2.901,200.488 55.184,253.352 81.33,279.775 115.662,293 149.994,293 184.334,293 218.666,279.784 244.803,253.352 297.104,200.506 297.104,114.507 244.802,61.643z M149.984,174C159.849,174,167.855,165.993,167.855,156.129L167.882,24.871C167.882,15.007 159.876,7 150.011,7 140.145,7 132.139,15.007 132.139,24.871L132.139,78.486 132.112,156.128C132.112,166.002,140.118,174,149.984,174z" />
+
+                                                </DrawingGroup>
+
+                                            </DrawingGroup>
+
+                                        </DrawingGroup>
+
+                                    </DrawingImage.Drawing>
+
+                                </DrawingImage>
+
+                            </Image.Source>
+
+                        </Image>
+
+                    </Button.Content>
+
+                </Button>
+
+            </StackPanel>
+
+        </Grid>
+
+        <Grid Grid.Row="1"
+              Margin="16,8">
+
+            <TextBlock HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="16"
+                       Foreground="{StaticResource DarkBlueBrush}"
+                       Text="{Binding RelativeSource={RelativeSource AncestorType=local:CustomMbox}, Path=Text}"
+                       TextWrapping="Wrap" />
+
+        </Grid>
+
+        <StackPanel x:Name="btnsContainer"
+                    Grid.Row="2"
+                    Height="60"
+                    Margin="16,0"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+
+            <!--<Button x:Name="yesBtn"
+                    Width="70"
+                    Margin="4,12"
+                    Click="Btn_Click"
+                    Content="Yes"
+                    Cursor="Hand"
+                    FontSize="16"
+                    Foreground="White">
+
+                <Button.Resources>
+
+                    <Style TargetType="Button">
+
+                        <Setter Property="Background" Value="{StaticResource DarkBlueBrush}" />
+
+                        <Setter Property="Template">
+
+                            <Setter.Value>
+
+                                <ControlTemplate TargetType="Button">
+
+                                    <Border Background="{TemplateBinding Background}"
+                                            CornerRadius="8">
+
+                                        <ContentPresenter HorizontalAlignment="Center"
+                                                          VerticalAlignment="Center" />
+
+                                    </Border>
+
+                                </ControlTemplate>
+
+                            </Setter.Value>
+
+                        </Setter>
+
+                        <Style.Triggers>
+
+                            <Trigger Property="IsMouseOver" Value="True">
+
+                                <Setter Property="Background" Value="#201658" />
+
+                            </Trigger>
+
+                        </Style.Triggers>
+
+                    </Style>
+
+                </Button.Resources>
+
+            </Button>
+
+            <Button x:Name="noBtn"
+                    Width="70"
+                    Margin="4,12"
+                    Click="Btn_Click"
+                    Content="No"
+                    Cursor="Hand"
+                    FontSize="16"
+                    Foreground="White">
+
+                <Button.Resources>
+
+                    <Style TargetType="Button">
+
+                        <Setter Property="Background" Value="{StaticResource DarkBlueBrush}" />
+
+                        <Setter Property="Template">
+
+                            <Setter.Value>
+
+                                <ControlTemplate TargetType="Button">
+
+                                    <Border Background="{TemplateBinding Background}"
+                                            CornerRadius="8">
+
+                                        <ContentPresenter HorizontalAlignment="Center"
+                                                          VerticalAlignment="Center" />
+
+                                    </Border>
+
+                                </ControlTemplate>
+
+                            </Setter.Value>
+
+                        </Setter>
+
+                        <Style.Triggers>
+
+                            <Trigger Property="IsMouseOver" Value="True">
+
+                                <Setter Property="Background" Value="#201658" />
+
+                            </Trigger>
+
+                        </Style.Triggers>
+
+                    </Style>
+
+                </Button.Resources>
+
+            </Button>-->
+
+        </StackPanel>
+
+    </Grid>
+
+</Window>

@@ -69,6 +69,24 @@ namespace DownloaderApp.UserControls
         public static new readonly DependencyProperty BackgroundProperty =
             DependencyProperty.Register("Background", typeof(Brush), typeof(DirectoryDialog), new PropertyMetadata(Brushes.Transparent));
 
+        public ICommand SelectedPathCommand
+        {
+            get { return (ICommand)GetValue(SelectedPathCommandProperty); }
+            set { SetValue(SelectedPathCommandProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectedPathCommandProperty =
+            DependencyProperty.Register("SelectedPathCommand", typeof(ICommand), typeof(DirectoryDialog));
+
+        public object SelectedPathCommandParameter
+        {
+            get { return GetValue(SelectedPathCommandParameterProperty); }
+            set { SetValue(SelectedPathCommandParameterProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectedPathCommandParameterProperty =
+            DependencyProperty.Register("SelectedPathCommandParameter", typeof(object), typeof(DirectoryDialog));
+
         public DirectoryDialog()
         {
             InitializeComponent();
@@ -89,6 +107,8 @@ namespace DownloaderApp.UserControls
 
             // Our final value is in path
             SelectedPath = path;
+            if (SelectedPathCommand.CanExecute(SelectedPathCommandParameter))
+                SelectedPathCommand.Execute(SelectedPathCommandParameter);
         }
     }
 }
