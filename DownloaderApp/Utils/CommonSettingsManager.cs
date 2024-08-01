@@ -7,6 +7,11 @@ namespace DownloaderApp.Utils
     {
         public static bool CreateIfNotExist()
         {
+            string? settingsParent = Directory.GetParent(App.CommonSettings)?.FullName;
+
+            if (settingsParent is not null && !Directory.Exists(settingsParent))
+                Directory.CreateDirectory(settingsParent);
+
             if (!File.Exists(App.CommonSettings))
             {
                 using StreamWriter w = File.AppendText(App.CommonSettings);

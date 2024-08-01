@@ -29,9 +29,6 @@
 	  <CopyToPublishDirectory>Never</CopyToPublishDirectory>
 	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
-    <None Update="common_settings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="ffmpeg.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

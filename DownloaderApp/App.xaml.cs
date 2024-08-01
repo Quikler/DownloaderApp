@@ -5,12 +5,9 @@ using System.Windows;
 
 namespace DownloaderApp
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
-        public static string CommonSettings { get; } = $"{AppContext.BaseDirectory}common_settings.json";
+        public static string CommonSettings { get; } = 
+            $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\{nameof(DownloaderApp)}\\common_settings.json";
     }
-
 }
