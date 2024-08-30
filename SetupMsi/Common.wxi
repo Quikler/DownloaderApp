@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+
+	<?if $(var.Platform) = x64 ?>
+
+	<?define ProductCode = "{10EC7B26-21C9-482C-BEA4-F3D864B98ED7}" ?>
+	<?define UpgradeCode = "{D650021B-D668-489C-B694-B8E2A1DEF752}" ?>
+	<?define ProgramFilesDir = "ProgramFiles64Folder" ?>
+	<?define Architecture = "64bit" ?>
+
+	<?else?>
+
+	<?define ProductCode = "{43AD591F-DFF1-4784-BDDF-906AA70CEF26}" ?>
+	<?define UpgradeCode = "{915A4001-99E8-4ACE-8DC4-6A0A8088FEAC}" ?>
+	<?define ProgramFilesDir = "ProgramFilesFolder" ?>
+	<?define Architecture = "32bit" ?>
+
+	<?endif?>
+
+	<?define ProductName = "DownloaderApp" ?>
+	<?define ProductNameArchitecture = "$(var.ProductName) ($(var.Architecture))" ?>
+	<?define Company = "$(var.ProductName)" ?>
+	<?define ProductUrl = "https://www.github.com/Quikler/DownloaderApp" ?>
+	<?define Language = "1033" ?>
+
+	<?define DowngradeErrorMessage = "A newer version of [ProductName] is already installed." ?>
+
+	<?define PublishDir = "..\DownloaderApp\bin\$(var.Configuration)\net7.0-windows\win-$(var.Platform)\publish" ?>
+	<?define DesktopRuntimeExe = "windowsdesktop-runtime-7.0.18-win-$(var.Platform).exe" ?>
+	<?define DesktopRuntimeName = ".NET Desktop Runtime 7.0.18 ($(var.Architecture))" ?>
+
+</Include>

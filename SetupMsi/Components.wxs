@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+	<?include "Common.wxi" ?>
+
+	<Fragment>
+		<!-- BundleCachePath is the path to burn installer exe. Property will be set in custom action -->
+		<Property Id="BundleCachePath" Value="ignore" />
+
+		<DirectoryRef Id="INSTALLFOLDER">
+
+			<Component Id="Uninstall" Guid="{42176E21-CA41-4D32-B43E-E27C2AC1FCC3}" KeyPath="yes">
+
+				<Shortcut Id="Uninstall"
+						  Name="uninstall"
+						  Target="[BundleCachePath]"
+						  Arguments="/uninstall" />
+
+			</Component>
+
+		</DirectoryRef>
+
+		<!-- Program menu folder -->
+		<DirectoryRef Id="InstallProgramMenuFolder">
+
+			<!-- ApplicationShortcut component -->
+			<Component Id="ApplicationMenuShortcut"
+					   Guid="{A8213F79-FAF4-4A89-AB97-3AC7FBAA1912}">
+
+				<Shortcut Id="ApplicationMenuShortcut"
+						  Name="$(var.ProductNameArchitecture)"
+						  Icon="icon.ico"
+						  Target="[INSTALLFOLDER]\$(var.ProductName).exe"
+						  Directory="InstallProgramMenuFolder"
+						  WorkingDirectory="INSTALLFOLDER" />
+
+				<!-- Our unique key for this component/shortcut -->
+				<RegistryValue Root="HKCU" Key="SOFTWARE\$(var.ProductName)" Name="Shortcut" Value="1" Type="integer" KeyPath="yes" />
+
+				<!-- Remove ProgramMenuFolder -->
+				<RemoveFolder Id="RemoveInstallProgramMenuFolder" Directory="InstallProgramMenuFolder" On="uninstall" />
+			</Component>
+
+		</DirectoryRef>
+
+		<!-- Desktop folder -->
+		<DirectoryRef Id="DesktopFolder">
+
+			<!-- ApplicationShortcut component -->
+			<Component Id="ApplicationShortcutDesktop"
+					   Guid="{8681DEC6-EF33-47E5-8793-E360FC132DD4}">
+
+				<Shortcut Id="ApplicationShortcutDesktop"
+						  Name="$(var.ProductNameArchitecture)"
+						  Icon="icon.ico"
+						  Target="[INSTALLFOLDER]\$(var.ProductName).exe"
+						  Directory="DesktopFolder"
+						  WorkingDirectory="INSTALLFOLDER" />
+
+				<!-- Our unique key for this component/shortcut -->
+				<RegistryValue Root="HKCU" Key="SOFTWARE\$(var.ProductName)" Name="Shortcut" Value="1" Type="integer" KeyPath="yes" />
+
+				<!-- Remove ProgramMenuFolder -->
+				<RemoveFolder Id="RemoveDesktopFolder" Directory="DesktopFolder" On="uninstall" />
+			</Component>
+
+		</DirectoryRef>
+
+	</Fragment>
+
+</Wix>

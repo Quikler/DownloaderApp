@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+	 xmlns:util="http://schemas.microsoft.com/wix/UtilExtension"
+	 xmlns:bal="http://schemas.microsoft.com/wix/BalExtension">
+
+	<!-- Include file with common variables -->
+	<?include "$(var.SetupMsi.ProjectDir)\Common.wxi" ?>
+
+	<Bundle Name="$(var.ProductNameArchitecture)"
+			Version="$(var.BuildVersion)"
+			AboutUrl="$(var.ProductUrl)"
+			IconSourceFile="$(var.DownloaderApp.ProjectDir)\icon.ico"
+			Manufacturer="$(var.Company)"
+			UpgradeCode="$(var.UpgradeCode)">
+
+		<BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLargeLicense">
+			<bal:WixStandardBootstrapperApplication SuppressOptionsUI="yes"
+													ShowVersion="yes"
+													LicenseFile="$(var.SetupMsi.ProjectDir)\License.rtf"/>
+		</BootstrapperApplicationRef>
+
+		<Chain>
+			<MsiPackage SourceFile="$(var.SetupMsi.TargetDir)\SetupMsi.msi"
+						DisplayInternalUI="yes"
+						Compressed="yes"
+						Vital="yes">
+				<MsiProperty Name="BuildVersion" Value="$(var.BuildVersion)" />
+			</MsiPackage>
+
+			<!-- Check if .NET Desktop Runtime is installed -->
+			<PackageGroupRef Id="NetFx45Web" />
+
+			<!-- Include .NET Desktop Runtime installation -->
+			<ExePackage Id="DotNetDesktopRuntime"
+						DisplayName="$(var.DesktopRuntimeName)"
+						Cache="yes"
+						Compressed="yes"
+						PerMachine="yes"
+						Permanent="yes"
+						Vital="yes"
+						SourceFile="$(var.DesktopRuntimeExe)"
+						InstallCommand="/q"
+						DetectCondition="Netfx4FullVersion AND (NOT Netfx4x64FullVersion)"/>
+		</Chain>
+	</Bundle>
+
+	<Fragment>
+		<!-- Check regisrty keys -->
+		<util:RegistrySearch Root="HKLM" Value="Version" Variable="Netfx4FullVersion"
+							 Key="SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" />
+		<util:RegistrySearch Root="HKLM" Value="Version" Variable="Netfx4x64FullVersion"
+							 Key="SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" />
+
+		<PackageGroup Id="NetFx45Web">
+			<ExePackage Id="NetFx45Web"
+						DisplayName="$(var.DesktopRuntimeName)"
+						Cache="no"
+						Compressed="yes"
+						PerMachine="yes"
+						Permanent="yes"
+						Vital="yes"
+						InstallCommand="/q"
+						SourceFile="$(var.DesktopRuntimeExe)"
+						DetectCondition="(Netfx4FullVersion AND (NOT Netfx4x64FullVersion)) OR (Netfx4x64FullVersion)" />
+		</PackageGroup>
+	</Fragment>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="$(var.ProductName)" />
+			</Directory>
+		</Directory>
+	</Fragment>
+</Wix>

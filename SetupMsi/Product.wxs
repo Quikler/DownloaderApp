@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+	 xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+
+	<!-- Include file with common variables -->
+	<?include "Common.wxi" ?>
+
+	<Product Id="$(var.ProductCode)"
+			 Name="$(var.ProductNameArchitecture)"
+			 Language="$(var.Language)"
+			 Version="$(var.BuildVersion)"
+			 Manufacturer="$(var.Company)"
+			 UpgradeCode="$(var.UpgradeCode)">
+
+		<Package InstallerVersion="200"
+				 Compressed="yes"
+				 InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="$(var.DowngradeErrorMessage)" />
+		<MediaTemplate EmbedCab="yes" />
+
+		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+
+		<Icon Id="icon.ico" SourceFile="$(var.DownloaderApp.ProjectDir)\icon.ico" />
+
+		<UIRef Id="WixUI_InstallDirWithoutLicense" />
+
+		<InstallExecuteSequence>
+			<Custom Action="FindBundleCachePathByUpgradeCode" Before="InstallFiles" />
+		</InstallExecuteSequence>
+
+		<!-- Files to include in an actual application -->
+		<Feature Id="ProductFeature" Title="$(var.ProductName)" Level="1">
+
+			<!-- HeatGeneratedComponents component reference -->
+			<ComponentGroupRef Id="HeatGeneratedComponents" />
+
+			<!-- Application shortcut in desktop folder -->
+			<ComponentRef Id="ApplicationShortcutDesktop" />
+
+			<!-- Application shortcut in menu folder -->
+			<ComponentRef Id="ApplicationMenuShortcut" />
+
+			<ComponentRef Id="Uninstall" />
+
+		</Feature>
+
+	</Product>
+
+	<Fragment>
+		<!-- CustomAction to run FindBundleCachePathByUpgradeCode method -->
+		<CustomAction Id="FindBundleCachePathByUpgradeCode"
+					  BinaryKey="FindBundleCachePathByUpgradeCode.CA"
+					  DllEntry="FindBundleCachePathByUpgradeCode" />
+
+		<!-- Reference to CustomAction lib -->
+		<Binary Id="FindBundleCachePathByUpgradeCode.CA"
+				SourceFile="..\CustomActions\bin\$(var.Configuration)\CustomActions.CA.dll" />
+
+	</Fragment>
+
+	<!-- Wix InstallDir UI Without License agreement dialog -->
+	<Fragment>
+		<UI Id="WixUI_InstallDirWithoutLicense">
+			<UIRef Id="WixUI_InstallDir" />
+			<UIRef Id="WixUI_ErrorProgressText" />
+			<Publish Dialog="WelcomeDlg"
+				  Control="Next"
+				  Event="NewDialog"
+				  Value="InstallDirDlg"
+				  Order="2">1</Publish>
+			<Publish Dialog="InstallDirDlg"
+				  Control="Back"
+				  Event="NewDialog"
+				  Value="WelcomeDlg"
+				  Order="2">1</Publish>
+		</UI>
+	</Fragment>
+</Wix>

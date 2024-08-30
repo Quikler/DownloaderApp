@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+	<!-- Include file with common variables -->
+	<?include "Common.wxi" ?>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramMenuFolder">
+				<Directory Id="InstallProgramMenuFolder" Name="$(var.ProductName)" />
+			</Directory>
+
+			<Directory Id="$(var.ProgramFilesDir)">
+				<Directory Id="INSTALLFOLDER" Name="$(var.ProductName)" />
+			</Directory>
+
+			<Directory Id="DesktopFolder" Name="$(var.ProductName)" />
+		</Directory>
+	</Fragment>
+	
+</Wix>
