@@ -1,14 +1,18 @@
-﻿using DownloaderApp.MVVM.Abstractions;
+﻿using AngleSharp.Media.Dom;
+using AngleSharp.Text;
+using DownloaderApp.Models;
+using DownloaderApp.MVVM.Abstractions;
 using DownloaderApp.MVVM.Model;
 using DownloaderApp.UserControls;
 using DownloaderApp.Utils;
+using DownloaderApp.Utils.Helpers;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using YoutubeExplode.Common;
 using YoutubeExplode.Exceptions;
+using YoutubeExplode.Videos;
 using YoutubeExplode.Videos.Streams;
-using YTDownloader.CLasses;
-using YTDownloader.CLasses.Models;
 
 namespace DownloaderApp.MVVM.ViewModel
 {
@@ -28,6 +32,24 @@ namespace DownloaderApp.MVVM.ViewModel
         {
             get { return _selectedIndex; }
             set { RaiseAndSetIfChanged(ref _selectedIndex, value); }
+        }
+
+        private string? _audioSource;
+        public string? AudioSource
+        {
+            get { return _audioSource; }
+            set { RaiseAndSetIfChanged(ref _audioSource, value); }
+        }
+
+        private bool _loadPreview;
+        public bool LoadPreview
+        {
+            get { return _loadPreview; }
+            set
+            {
+                RaiseAndSetIfChanged(ref _loadPreview, value);
+                CommonSettingsManager.ChangeToCommonSettings("loadPreview", value.ToString());
+            }
         }
 
         public YoutubeVM()
@@ -60,6 +82,7 @@ namespace DownloaderApp.MVVM.ViewModel
             });
 
             SelectedPath = CommonSettingsManager.ReadFromCommonSettings("youtubePath");
+            LoadPreview = CommonSettingsManager.ReadFromCommonSettings("loadPreview").ToBoolean();
         }
 
         protected override async void TextChangedCommandExecute(object? parameter)
@@ -72,16 +95,34 @@ namespace DownloaderApp.MVVM.ViewModel
 
             try
             {
-                _youtubeModel.Info = await YTMediaDownloader.GetSimpleInfoAsync(InputText!);
-                string source = _youtubeModel.Info.StreamManifest.GetMuxedStreams().GetWithHighestVideoQuality().Url;
+                _youtubeModel.Info = await YTHelper.GetInfoAsync(InputText!);
 
-                var media = new MediaElement { Source = new Uri(source) };
-                media.MediaOpened += (sender, e) =>
+                if (LoadPreview)
+                {
+                    _youtubeModel.StreamInfo = _youtubeModel.Info.Value.manifest
+                        .GetVideoOnlyStreams()
+                        .Where(vos => vos.Container == Container.Mp4)
+                        .GetWithHighestVideoQuality();
+
+                    var media = new MediaElement { Source = new Uri(_youtubeModel.StreamInfo.Url) };
+
+                    AudioSource = _youtubeModel.Info.Value.manifest
+                        .GetAudioOnlyStreams()
+                        .GetWithHighestBitrate().Url;
+
+                    media.MediaOpened += (sender, e) =>
+                    {
+                        cancellationTokenSource.Cancel();
+                        IsDownloadButtonEnabled = true;
+                    };
+
+                    MediaSource = new[] { media };
+                }
+                else
                 {
                     cancellationTokenSource.Cancel();
                     IsDownloadButtonEnabled = true;
-                };
-                MediaSource = new[] { media };
+                }
             }
             catch (YoutubeExplodeException ex)
             {
@@ -108,7 +149,7 @@ namespace DownloaderApp.MVVM.ViewModel
                 return false;
             }
 
-            if (_youtubeModel.Info is not null && InputText.Contains(_youtubeModel.Info.YoutubeVideo.Url))
+            if (_youtubeModel.Info.HasValue && InputText.Contains(_youtubeModel.Info.Value.video.Url))
             {
                 InfoSignState = InfoSignState.Success;
                 InfoSignToolTip = "Specified video already in preview";
@@ -130,10 +171,36 @@ namespace DownloaderApp.MVVM.ViewModel
             IsDownloadButtonEnabled = false;
             bool isAudio = SelectedIndex == 0;
 
-            DownloadedMediaInfo downloadedMedia;
+            var audioStream = _youtubeModel.Info?.manifest
+                .GetAudioOnlyStreams()
+                .GetWithHighestBitrate()!;
+
+            var tempAudioFilePath = await YTHelper.DownloadToTempAsync(audioStream);
+
+            (string mediaType, string extenstion, FFmpegOptions options) =
+                await PrepareDownloadOptionsAsync(_youtubeModel.Info?.video!, isAudio, 
+                t => t.Resolution.Width >= 300 && t.Resolution.Width <= 600);
+
+            string destinationFilePath = $"{SelectedPath}\\{options.Title}{extenstion}";
+
             try
             {
-                downloadedMedia = await _youtubeModel.DownloadMediaAsync(SelectedPath!, isAudio);
+                if (isAudio)
+                {
+                    await FFmpegHelper.CreateAudioAsync(destinationFilePath, tempAudioFilePath, options, true);
+                }
+                else
+                {
+                    var videoStream = _youtubeModel.StreamInfo ?? _youtubeModel.Info?.manifest
+                        .GetVideoOnlyStreams()
+                        .Where(vos => vos.Container == Container.Mp4)
+                        .GetWithHighestVideoQuality()!;
+
+                    var tempVideoFilePath = await YTHelper.DownloadToTempAsync(videoStream);
+
+                    await FFmpegHelper.MergeVideoAndAudioAsync(destinationFilePath, tempVideoFilePath,
+                        tempAudioFilePath, options, true, true);
+                }
             }
             catch (Exception ex)
             {
@@ -148,8 +215,8 @@ namespace DownloaderApp.MVVM.ViewModel
             }
 
             InfoSignState = InfoSignState.Success;
-            InfoSignToolTip = $"Youtube {(isAudio ? "audio" : "video")} <{downloadedMedia.YoutubeVideo.Id}> " +
-                $"has been downloaded by path \"{downloadedMedia.FileInfo.FullName}\"";
+            InfoSignToolTip = $"Youtube {(isAudio ? "audio" : "video")} <{_youtubeModel.Info?.video.Id}> " +
+                $"has been downloaded by path \"{destinationFilePath}\"";
         }
 
         protected override bool ClickCommandCanExecute(object? parameter)
@@ -158,6 +225,34 @@ namespace DownloaderApp.MVVM.ViewModel
                 return false;
 
             return true;
+        }
+
+        private async Task<(string mediaType, string extension, FFmpegOptions options)> PrepareDownloadOptionsAsync(
+            Video video, bool isAudio, Func<Thumbnail, bool>? thumbnailExpression = null)
+        {
+            string mediaType = isAudio ? "Audio" : "Video";
+            string extension = isAudio ? ".mp3" : ".mp4";
+
+            byte[]? thumbnail = null;
+            if (thumbnailExpression is not null)
+            {
+                string? url = video.Thumbnails.FirstOrDefault(thumbnailExpression)?.Url;
+
+                if (url is not null)
+                    thumbnail = await YTHelper.GetThumbnailBytesAsync(url);
+            }
+
+            var options = new FFmpegOptions
+            {
+                Author = PathHelper.CreateValidFileName(video.Author.ChannelTitle),
+                Title = PathHelper.CreateValidFileName(video.Title),
+                Date = video.UploadDate.Year,
+                Album = "DownloaderApp",
+                AlbumArtist = "Quikler",
+                Thumbnail = thumbnail,
+            };
+
+            return (mediaType, extension, options);
         }
     }
 }

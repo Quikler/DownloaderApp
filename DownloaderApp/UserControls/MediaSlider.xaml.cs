@@ -1,24 +1,21 @@
 ﻿using DownloaderApp.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace DownloaderApp.UserControls
 {
     public partial class MediaSlider : UserControl
     {
+        public MediaElement TargetAudioSource
+        {
+            get { return (MediaElement)GetValue(TargetAudioSourceProperty); }
+            set { SetValue(TargetAudioSourceProperty, value); }
+        }
+
+        public static readonly DependencyProperty TargetAudioSourceProperty =
+            DependencyProperty.Register("TargetAudioSource", typeof(MediaElement), typeof(MediaSlider));
+
         public MediaElement Target
         {
             get { return (MediaElement)GetValue(TargetProperty); }
@@ -65,8 +62,11 @@ namespace DownloaderApp.UserControls
                 if (e.Key == System.Windows.Input.Key.Left || e.Key == System.Windows.Input.Key.Down
                     || e.Key == System.Windows.Input.Key.Right || e.Key == System.Windows.Input.Key.Up)
                 {
-                    Target.Position = TimeSpan.FromSeconds(_slider.Value);
-                    _currentTime.Text = Target.Position.ToString(TIME_FORMAT);
+                    var position = TimeSpan.FromSeconds(_slider.Value);
+                    Target.Position = position;
+                    TargetAudioSource.Position = position;
+
+                    _currentTime.Text = position.ToString(TIME_FORMAT);
                     dispatcherTimer.Start();
                 }
             };
@@ -114,8 +114,11 @@ namespace DownloaderApp.UserControls
 
             dispatcherTimer.Start();
 
-            Target.Position = TimeSpan.FromSeconds(_slider.Value);
-            _currentTime.Text = Target.Position.ToString(TIME_FORMAT);
+            var position = TimeSpan.FromSeconds(_slider.Value);
+            Target.Position = position;
+            TargetAudioSource.Position = position;
+
+            _currentTime.Text = position.ToString(TIME_FORMAT);
         }
     }
 }

@@ -144,6 +144,13 @@
 
         </Grid>
 
+        <CheckBox Content="Load preview" 
+                  VerticalAlignment="Bottom"
+                  Foreground="White" 
+                  Margin="0 0 6 6"
+                  IsChecked="{Binding LoadPreview}"
+                  HorizontalAlignment="Right" />
+
         <uc:SearchTextBox Grid.Row="1"
                           Padding="16,8"
                           BorderBrush="#FF004D"
@@ -201,6 +208,7 @@
                           IsSourceSelectable="False"
                           MenuBackground="White"
                           MenuForeground="Black"
+                          AudioTrackSource="{Binding AudioSource}"
                           MenuHoverColor="LightGray"
                           Source="{Binding MediaSource}" />
 

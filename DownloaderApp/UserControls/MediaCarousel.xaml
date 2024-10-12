@@ -308,9 +308,15 @@
                                 FocusVisualStyle="{x:Null}"
                                 MouseLeftButtonDown="OnPausePlaySelectedMedia" />
 
+                <MediaElement x:Name="_audioTrack"
+                              LoadedBehavior="Manual"
+                              Visibility="Collapsed"
+                              Source="{Binding RelativeSource={RelativeSource AncestorType=local:MediaCarousel}, Path=AudioTrackSource}" />
+
                 <local:MediaSlider x:Name="_slider"
                                    Grid.Row="1"
                                    Target="{Binding RelativeSource={RelativeSource AncestorType=local:MediaCarousel}, Path=SelectedMedia}"
+                                   TargetAudioSource="{Binding ElementName=_audioTrack}"
                                    Visibility="Collapsed" />
             </Grid>
 

@@ -255,15 +255,13 @@
                                       Command="{Binding LoginMenuItemCommand}"
                                       Header="Login" />
 
-                            <!--<MenuItem Padding="0,12"
-                                      Command="{Binding nope}"
-                                      Header="Challenge" />-->
-
                             <MenuItem Padding="0,12"
                                       Command="{Binding InstagramMenuItemCommand}"
                                       Header="Downloader" />
 
                         </MenuItem>
+
+                        
 
                     </Menu>
                     

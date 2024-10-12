@@ -81,6 +81,15 @@ namespace DownloaderApp.UserControls
         public static readonly DependencyProperty SelectedMediaProperty =
             DependencyProperty.Register("SelectedMedia", typeof(MediaElement), typeof(MediaCarousel));
 
+        public string AudioTrackSource
+        {
+            get { return (string)GetValue(AudioTrackSourceProperty); }
+            set { SetValue(AudioTrackSourceProperty, value); }
+        }
+
+        public static readonly DependencyProperty AudioTrackSourceProperty =
+            DependencyProperty.Register("AudioTrackSource", typeof(string), typeof(MediaCarousel));
+
         public bool IsSourceSelectable
         {
             get { return (bool)GetValue(IsSourceSelectableProperty); }
@@ -162,6 +171,9 @@ namespace DownloaderApp.UserControls
                 media.MediaOpened -= OnMediaOpened;
                 media.Stop();
                 media.Source = null;
+
+                _audioTrack.Stop();
+                //_audioTrack.Source = null;
             }
         }
 
@@ -176,10 +188,15 @@ namespace DownloaderApp.UserControls
         private void OnMediaLoaded(object sender, RoutedEventArgs e)
         {
             SelectedMedia?.Play();
+            _audioTrack?.Play();
             _mediaContentControl.Focus();
         }
 
-        private void OnMediaUnloaded(object sender, RoutedEventArgs e) => SelectedMedia?.Pause();
+        private void OnMediaUnloaded(object sender, RoutedEventArgs e)
+        {
+            SelectedMedia?.Pause();
+            _audioTrack?.Pause();
+        }
 
         private void OnMediaOpened(object sender, RoutedEventArgs e)
         {
@@ -187,6 +204,8 @@ namespace DownloaderApp.UserControls
             if (selected is null)
                 return;
 
+            _audioTrack?.Stop();
+            _audioTrack?.Play();
             _slider.Visibility = selected.HasTimeSpan() ? Visibility.Visible : Visibility.Collapsed;
         }
         #endregion
@@ -195,6 +214,7 @@ namespace DownloaderApp.UserControls
         public ICommand ButtonPreviousCommand => new RelayCommand(obj =>
         {
             SelectedMedia?.Pause();
+            _audioTrack?.Pause();
             _selectedIndex--;
             SelectedMedia = Source[_selectedIndex];
 
@@ -203,6 +223,7 @@ namespace DownloaderApp.UserControls
         public ICommand ButtonNextCommand => new RelayCommand(obj =>
         {
             SelectedMedia?.Pause();
+            _audioTrack?.Pause();
             _selectedIndex++;
             SelectedMedia = Source[_selectedIndex];
 
@@ -246,8 +267,18 @@ namespace DownloaderApp.UserControls
             if (SelectedMedia is null || !SelectedMedia.HasTimeSpan())
                 return;
 
-            if (SelectedMedia.GetCurrentState() == MediaState.Play) SelectedMedia.Pause();
-            else SelectedMedia.Play();
+            //if (SelectedMedia.GetCurrentState() == MediaState.Play) SelectedMedia.Pause();
+            //else SelectedMedia.Play();
+            if (SelectedMedia.GetCurrentState() == MediaState.Play)
+            {
+                SelectedMedia?.Pause();
+                _audioTrack?.Pause();
+            }
+            else
+            {
+                SelectedMedia?.Play();
+                _audioTrack?.Play();
+            }
         }
 
         // tap space to pause/play SelectedMedia
@@ -256,8 +287,16 @@ namespace DownloaderApp.UserControls
             if (e.Key != Key.Space || SelectedMedia is null || !SelectedMedia.HasTimeSpan())
                 return;
 
-            if (SelectedMedia.GetCurrentState() == MediaState.Play) SelectedMedia.Pause();
-            else SelectedMedia.Play();
+            if (SelectedMedia.GetCurrentState() == MediaState.Play)
+            {
+                SelectedMedia?.Pause();
+                _audioTrack?.Pause();
+            }
+            else
+            {
+                SelectedMedia?.Play();
+                _audioTrack?.Play();
+            }
         }
         #endregion
     }

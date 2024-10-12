@@ -34,6 +34,7 @@ namespace DownloaderApp.MVVM.ViewModel
             YoutubeMenuItemCommand = new RelayCommand(obj => FadeAnimation(YoutubeView), obj => CurrentPage != YoutubeView);
             InstagramMenuItemCommand = new RelayCommand(obj => FadeAnimation(InstagramView), obj => CurrentPage != InstagramView);
             LoginMenuItemCommand = new RelayCommand(obj => FadeAnimation(LoginView), obj => CurrentPage != LoginView);
+            
         }
 
         private void FadeAnimation(Page desiredPage) => BeginFadeOutPage(desiredPage, TimeSpan.FromMilliseconds(200));
