@@ -47,16 +47,14 @@
                     <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}"
                                  Value="Maximized">
 
-                        <Setter Property="Margin"
-                                Value="6" />
+                        <Setter Property="Margin" Value="6" />
 
                     </DataTrigger>
 
                     <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}"
                                  Value="Normal">
 
-                        <Setter Property="Margin"
-                                Value="0" />
+                        <Setter Property="Margin" Value="0" />
 
                     </DataTrigger>
 
@@ -70,17 +68,13 @@
 
             <Grid.Background>
 
-                <LinearGradientBrush StartPoint="0,0"
-                                     EndPoint="1,1">
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
 
-                    <GradientStop Offset=".2"
-                                  Color="{StaticResource Color77224e}" />
+                    <GradientStop Offset=".2" Color="{StaticResource Color77224e}" />
 
-                    <GradientStop Offset=".1"
-                                  Color="{StaticResource Color602553}" />
+                    <GradientStop Offset=".1" Color="{StaticResource Color602553}" />
 
-                    <GradientStop Offset=".8"
-                                  Color="{StaticResource DarkBlue}" />
+                    <GradientStop Offset=".8" Color="{StaticResource DarkBlue}" />
 
                 </LinearGradientBrush>
 
@@ -261,10 +255,13 @@
 
                         </MenuItem>
 
-                        
+                        <MenuItem Padding="28,12,0,12"
+                                  Command="{Binding SettingsMenuItemCommand}"
+                                  Header="Settings"
+                                  Style="{StaticResource MenuItemTheme}" />
 
                     </Menu>
-                    
+
                 </StackPanel>
 
                 <Frame Grid.Row="1"
@@ -296,20 +293,15 @@
 
                                     <StackPanel.Background>
 
-                                        <LinearGradientBrush StartPoint="0,0"
-                                                             EndPoint="0,1">
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
 
-                                            <GradientStop Offset=".5"
-                                                          Color="#7E2553" />
+                                            <GradientStop Offset=".5" Color="#7E2553" />
 
-                                            <GradientStop Offset=".6"
-                                                          Color="#FF004D" />
+                                            <GradientStop Offset=".6" Color="#FF004D" />
 
-                                            <GradientStop Offset=".9"
-                                                          Color="#FAEF5D" />
+                                            <GradientStop Offset=".9" Color="#FAEF5D" />
 
-                                            <GradientStop Offset=".2"
-                                                          Color="{StaticResource DarkBlue}" />
+                                            <GradientStop Offset=".2" Color="{StaticResource DarkBlue}" />
 
                                         </LinearGradientBrush>
 
@@ -329,20 +321,15 @@
 
                                     <StackPanel.Background>
 
-                                        <LinearGradientBrush StartPoint="0,0"
-                                                             EndPoint="0,1">
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
 
-                                            <GradientStop Offset=".5"
-                                                          Color="#7E2553" />
+                                            <GradientStop Offset=".5" Color="#7E2553" />
 
-                                            <GradientStop Offset=".6"
-                                                          Color="#FF004D" />
+                                            <GradientStop Offset=".6" Color="#FF004D" />
 
-                                            <GradientStop Offset=".9"
-                                                          Color="#FAEF5D" />
+                                            <GradientStop Offset=".9" Color="#FAEF5D" />
 
-                                            <GradientStop Offset=".2"
-                                                          Color="{StaticResource DarkBlue}" />
+                                            <GradientStop Offset=".2" Color="{StaticResource DarkBlue}" />
 
                                         </LinearGradientBrush>
 

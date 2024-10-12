@@ -14,12 +14,6 @@
       d:DesignWidth="700"
       mc:Ignorable="d">
 
-    <Page.Resources>
-
-        <util:FontSizeConverter x:Key="FontSizeConverter" />
-
-    </Page.Resources>
-
     <Page.DataContext>
 
         <vm:LoginVM />
@@ -55,21 +49,17 @@
                         <DrawingImage.Drawing>
                             <DrawingGroup ClipGeometry="M0,0 V447.83 H512 V0 H0 Z">
                                 <DrawingGroup.Transform>
-                                    <TranslateTransform X="1.2898353816126473E-06"
-                                                        Y="2.9337114028749056E-05" />
+                                    <TranslateTransform X="1.2898353816126473E-06" Y="2.9337114028749056E-05" />
                                 </DrawingGroup.Transform>
                                 <GeometryDrawing Geometry="F0 M512,447.83z M0,0z M6.206,425.469A6.202,6.202,0,0,1,0,419.263C0,417.492 0.235,415.746 0.663,414.018 10.613,335.171 57.883,318.012 101.627,306.762 122.635,301.35 164.528,280.273 159.449,253.094 148.853,243.275 138.336,229.704 136.503,209.464L135.229,209.49C132.297,209.446 129.451,208.774 126.807,207.273 120.959,203.948 117.756,197.576 116.211,190.315 112.973,168.129 112.153,156.8 123.979,151.851L124.075,151.816C122.608,124.446 127.234,84.1759999999999 99.131,75.6749999999999 154.622,7.1 218.597,-30.203 266.627,30.805 320.146,33.606 344.016,109.416 310.781,151.851L309.376,151.851C321.202,156.8 319.421,169.525 317.143,190.315 315.599,197.576 312.396,203.948 306.548,207.273 303.903,208.774 301.067,209.446 298.126,209.49L296.851,209.464C295.018,229.704 284.475,243.275 273.879,253.094 269.42,276.965 301.154,296.105 323.209,304.091A139.442,139.442,0,0,0,327.477,309.616C320.277,319.557 318.706,332.413 322.913,343.654 305.911,352.417 298.658,372.988 306.434,390.514 294.468,398.064 288.176,411.819 289.825,425.469L6.206,425.469z M425.264,320.107A86.778,86.778,0,0,0,444.71,318.466C474.07,312.644 497.862,290.999 507.367,262.643 510.963,252.099 512.438,240.98 511.888,229.302 510.709,205.842 499.695,182.669 482.257,166.933 465.15,151.572 443.915,143.359 420.874,143.891 398.033,144.398 375.515,155.107 360.687,172.484 345.71,190.035 338.684,211.628 339.766,234.617 340.351,246.278 343.248,257.633 348.503,268.691 356.244,284.994 368.437,298.426 383.894,307.739L361.437,328.45 374.669,356.31 345.256,370.283 359.247,399.739 332.478,412.456 349.288,447.83 384.889,430.915 425.264,320.107z M440.503,190.743C454.188,195.612 461.327,210.651 456.457,224.336 451.587,238.021 436.549,245.169 422.864,240.299 409.179,235.429 402.03,220.382 406.901,206.697 411.771,193.012 426.818,185.872 440.503,190.743z">
 
                                     <GeometryDrawing.Brush>
 
-                                        <LinearGradientBrush StartPoint="0,0"
-                                                             EndPoint="1,0">
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
 
-                                            <GradientStop Offset=".25"
-                                                          Color="#FF004D" />
+                                            <GradientStop Offset=".25" Color="#FF004D" />
 
-                                            <GradientStop Offset="1"
-                                                          Color="#FAEF5D" />
+                                            <GradientStop Offset="1" Color="#FAEF5D" />
 
                                         </LinearGradientBrush>
 
@@ -121,8 +111,7 @@
 
                     <Style TargetType="Button">
 
-                        <Setter Property="Background"
-                                Value="#1D2B53" />
+                        <Setter Property="Background" Value="#1D2B53" />
 
                         <Setter Property="Template">
 
@@ -146,11 +135,9 @@
 
                         <Style.Triggers>
 
-                            <Trigger Property="IsMouseOver"
-                                     Value="True">
+                            <Trigger Property="IsMouseOver" Value="True">
 
-                                <Setter Property="Background"
-                                        Value="#201658" />
+                                <Setter Property="Background" Value="#201658" />
 
                             </Trigger>
 
@@ -159,8 +146,7 @@
 
                     <Style TargetType="Border">
 
-                        <Setter Property="CornerRadius"
-                                Value="10" />
+                        <Setter Property="CornerRadius" Value="10" />
 
                     </Style>
 
@@ -169,14 +155,6 @@
             </Button>
 
         </StackPanel>
-
-        <TextBlock MaxWidth="{Binding ElementName=page, Path=ActualWidth}"
-                   Margin="0,86,0,0"
-                   HorizontalAlignment="Center"
-                   FontFamily="Blackadder ITC"
-                   FontSize="{Binding ElementName=loginBtn, Path=ActualWidth, Converter={StaticResource FontSizeConverter}}"
-                   Foreground="#B3d3d3d3"
-                   Text="Instagram" />
 
     </StackPanel>
 

@@ -20,21 +20,24 @@ namespace DownloaderApp.MVVM.ViewModel
         public YoutubeView YoutubeView { get; }
         public InstagramView InstagramView { get; }
         public LoginView LoginView { get; }
+        public SettingsView SettingsView { get; set; }
 
         public ICommand YoutubeMenuItemCommand { get; }
         public ICommand InstagramMenuItemCommand { get; }
         public ICommand LoginMenuItemCommand { get; set; }
+        public ICommand SettingsMenuItemCommand { get; set; }
 
         public MainVM()
         {
             CurrentPage = YoutubeView = new YoutubeView();
             LoginView = new LoginView();
             InstagramView = new InstagramView();
+            SettingsView = new SettingsView();
 
             YoutubeMenuItemCommand = new RelayCommand(obj => FadeAnimation(YoutubeView), obj => CurrentPage != YoutubeView);
             InstagramMenuItemCommand = new RelayCommand(obj => FadeAnimation(InstagramView), obj => CurrentPage != InstagramView);
             LoginMenuItemCommand = new RelayCommand(obj => FadeAnimation(LoginView), obj => CurrentPage != LoginView);
-            
+            SettingsMenuItemCommand = new RelayCommand(obj => FadeAnimation(SettingsView), obj => CurrentPage != SettingsView);
         }
 
         private void FadeAnimation(Page desiredPage) => BeginFadeOutPage(desiredPage, TimeSpan.FromMilliseconds(200));
