@@ -2,44 +2,41 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <Fragment>
         <DirectoryRef Id="INSTALLFOLDER">
-            <Component Id="cmp9B28032C37E16B28FD1E09F2B2637195" Guid="{2ADE78D3-2454-427F-8178-3A6356C6D9D5}">
+            <Component Id="cmp9B28032C37E16B28FD1E09F2B2637195" Guid="{4F8A8BCF-9E1A-4F2C-BECD-B58CBA065C81}">
                 <File Id="fil5DB151349E04F3E95A05E5CAC97DDF1C" KeyPath="yes" Source="$(var.BasePath)\AngleSharp.dll" />
             </Component>
-            <Component Id="cmpCF9B3A227754E55B2A4622BDADF51333" Guid="{39C85596-3D26-409D-82AB-47BA28C54C42}">
+            <Component Id="cmpCF9B3A227754E55B2A4622BDADF51333" Guid="{74DA2449-DD40-4025-BC87-CB487C1953EA}">
                 <File Id="fil244CDAED28510644E512EA1DBCB9390F" KeyPath="yes" Source="$(var.BasePath)\BouncyCastle.Crypto.dll" />
             </Component>
-            <Component Id="cmp6228A85F637C399C686C4747550A32CE" Guid="{2D9ADCFE-5C8B-4BCB-B0F3-0CA7430B1F0F}">
+            <Component Id="cmp6228A85F637C399C686C4747550A32CE" Guid="{5E9506FF-4A68-43CC-B1D9-520062343AE4}">
                 <File Id="fil125FEFE6B35376D344C13F1A2F101E94" KeyPath="yes" Source="$(var.BasePath)\DownloaderApp.deps.json" />
             </Component>
-            <Component Id="cmp0925525BE8A43183C97E3B54C207DCB1" Guid="{4642C581-30DC-4799-99A7-A2C3F1C45688}">
+            <Component Id="cmp0925525BE8A43183C97E3B54C207DCB1" Guid="{00C21BFD-8597-484C-A01D-8C3E810F7EE5}">
                 <File Id="fil208B800AA6FC43E467854BB7B3A29CC4" KeyPath="yes" Source="$(var.BasePath)\DownloaderApp.dll" />
             </Component>
-            <Component Id="cmp8EC083AA4C48596F13B3DE04387C073B" Guid="{BD1ED6EA-F444-4680-B7B6-4F2026D81C90}">
+            <Component Id="cmp8EC083AA4C48596F13B3DE04387C073B" Guid="{465C8326-60A1-40CA-ACA1-51D663EB6DCF}">
                 <File Id="filC7B88EC6026C9F46C10B3E2ECD008C10" KeyPath="yes" Source="$(var.BasePath)\DownloaderApp.exe" />
             </Component>
-            <Component Id="cmp0FB090027A2D78164CB16ACCF43CCD94" Guid="{AA6C6939-6FDD-42F3-8DE9-077805E1570E}">
+            <Component Id="cmp0FB090027A2D78164CB16ACCF43CCD94" Guid="{220F338E-80A4-4054-B7CF-DE911F71D68C}">
                 <File Id="filE04BDB32404D7B42B2FF2E5368E806B8" KeyPath="yes" Source="$(var.BasePath)\DownloaderApp.runtimeconfig.json" />
             </Component>
-            <Component Id="cmp5097CAF52967A6CF76C81E53F4DD535C" Guid="{BB0893DC-6049-4446-986D-1D91BD79BFC8}">
+            <Component Id="cmp5097CAF52967A6CF76C81E53F4DD535C" Guid="{016516C3-556D-4893-8A17-660E6C022524}">
                 <File Id="fil288D72DC7A0E11135BBE918AEA1D3A82" KeyPath="yes" Source="$(var.BasePath)\ffmpeg.exe" />
             </Component>
-            <Component Id="cmpD3EE385AFF001DDDBA242EE682F16C63" Guid="{57A4FEF2-BB6B-41B6-9AC2-7F4046CDFB85}">
+            <Component Id="cmpD3EE385AFF001DDDBA242EE682F16C63" Guid="{731BF94E-BC29-4A0C-A7CA-0A77F40D5554}">
                 <File Id="fil4066CA3758B5215A5D7E671D2EDAE6F5" KeyPath="yes" Source="$(var.BasePath)\InstagramApiSharp.dll" />
             </Component>
-            <Component Id="cmp5344516B4204CCACC1F3797A54E6E110" Guid="{869A457D-EA58-4843-96F9-79AFAB8EBBE2}">
+            <Component Id="cmp5344516B4204CCACC1F3797A54E6E110" Guid="{5F02C846-64FA-4A1B-B52C-1AE4428A5714}">
                 <File Id="fil8340AD1A2A173394B410FC841B72C3BB" KeyPath="yes" Source="$(var.BasePath)\InstagramService.dll" />
             </Component>
-            <Component Id="cmp8AC833CFB7DC6722697152FE46DA157A" Guid="{1D953BB9-0280-4F35-915F-9E4C28484147}">
+            <Component Id="cmp8AC833CFB7DC6722697152FE46DA157A" Guid="{99A8E4A6-9A65-4B2B-9A16-73F5EC4BFC83}">
                 <File Id="filD3CAD095889A5DE7EAAE25C73BC9910A" KeyPath="yes" Source="$(var.BasePath)\Microsoft.Xaml.Behaviors.dll" />
             </Component>
-            <Component Id="cmpBC4FC00A26E7D32479D42D3411317FC5" Guid="{644F5FBF-0B6A-498D-BC43-ADF74A082835}">
+            <Component Id="cmpBC4FC00A26E7D32479D42D3411317FC5" Guid="{E90AC709-CB39-4403-A12B-B308109E94E8}">
                 <File Id="fil90A8AAD9FC612906D405476D61CEA3F4" KeyPath="yes" Source="$(var.BasePath)\Newtonsoft.Json.dll" />
             </Component>
-            <Component Id="cmp441A90F274624AD69BA61CF3DE5A1672" Guid="{5CA7E5E0-4636-4A46-A06D-B4897F443D15}">
+            <Component Id="cmp441A90F274624AD69BA61CF3DE5A1672" Guid="{8338A015-88C2-4966-9425-D61D382CDD78}">
                 <File Id="fil552876F3501B69A6FBD5578B8E25A2AD" KeyPath="yes" Source="$(var.BasePath)\YoutubeExplode.dll" />
-            </Component>
-            <Component Id="cmp39139AAD78C2F9EBBB8A2CB42A3CD1F8" Guid="{AD2A15D1-0AD8-4FF6-B77B-AB5883C85283}">
-                <File Id="fil5986193840AC05C0A83B6B37B4108BCB" KeyPath="yes" Source="$(var.BasePath)\YTDownloader.dll" />
             </Component>
         </DirectoryRef>
     </Fragment>
@@ -57,7 +54,6 @@
             <ComponentRef Id="cmp8AC833CFB7DC6722697152FE46DA157A" />
             <ComponentRef Id="cmpBC4FC00A26E7D32479D42D3411317FC5" />
             <ComponentRef Id="cmp441A90F274624AD69BA61CF3DE5A1672" />
-            <ComponentRef Id="cmp39139AAD78C2F9EBBB8A2CB42A3CD1F8" />
         </ComponentGroup>
     </Fragment>
 </Wix>
