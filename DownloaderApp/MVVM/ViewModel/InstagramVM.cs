@@ -1,5 +1,6 @@
 ﻿using DownloaderApp.MVVM.Abstractions;
 using DownloaderApp.MVVM.Model;
+using DownloaderApp.Settings;
 using DownloaderApp.UserControls;
 using DownloaderApp.Utils;
 using InstagramApiSharp.Classes;
@@ -34,12 +35,12 @@ namespace DownloaderApp.MVVM.ViewModel
 
             _instagramModel = new InstagramModel();
 
-            Mediator.IInstaApiChanged += (sender, e) =>
+            Mediator.InstaApiChanged += (sender, e) =>
             {
                 if (sender != this)
-                    _instagramModel.Api = e.Api;
+                    _instagramModel.Api = e;
             };
-            Mediator.NotifyIInstaApiChanged(this, new InstaApiEventArgs(_instagramModel.Api));
+            Mediator.NotifyInstaApiChanged(this, _instagramModel.Api);
 
             if (_instagramModel.Api.IsUserAuthenticated)
             {

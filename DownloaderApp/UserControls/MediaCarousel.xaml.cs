@@ -72,9 +72,9 @@ namespace DownloaderApp.UserControls
         public static readonly DependencyProperty ButtonBackgroundProperty =
             DependencyProperty.Register("ButtonBackground", typeof(Brush), typeof(MediaCarousel));
 
-        public MediaElement SelectedMedia
+        public MediaElement? SelectedMedia
         {
-            get { return (MediaElement)GetValue(SelectedMediaProperty); }
+            get { return (MediaElement?)GetValue(SelectedMediaProperty); }
             private set { SetValue(SelectedMediaProperty, value); }
         }
 
@@ -121,7 +121,7 @@ namespace DownloaderApp.UserControls
                 owner.SetDefaultSourceBehavior(newSource);
                 owner.SetDefaultSelectableMenu();
 
-                owner.SelectedMedia = newSource[owner._selectedIndex];
+                owner.SelectedMedia = newSource?[owner._selectedIndex];
             }));
 
         public List<MediaElement> SelectableCollection

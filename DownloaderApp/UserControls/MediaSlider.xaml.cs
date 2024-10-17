@@ -26,12 +26,12 @@ namespace DownloaderApp.UserControls
             DependencyProperty.Register("Target", typeof(MediaElement), typeof(MediaSlider), new((d, e) =>
             {
                 MediaSlider mediaSlider = (MediaSlider)d;
-                MediaElement newValue = (MediaElement)e.NewValue;
 
                 if (e.OldValue is MediaElement oldValue)
                     oldValue.MediaOpened -= mediaSlider.OnMediaOpened; // remove from old target OnMediaOpened event
 
-                newValue.MediaOpened += mediaSlider.OnMediaOpened; // add to new target OnMediaOpened event
+                if (e.NewValue is MediaElement newValue)
+                    newValue.MediaOpened += mediaSlider.OnMediaOpened; // add to new target OnMediaOpened event
             }));
 
         private const string TIME_FORMAT = "hh\\:mm\\:ss\\.f";

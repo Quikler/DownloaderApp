@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using DownloaderApp.Settings;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace DownloaderApp.MVVM.Abstractions

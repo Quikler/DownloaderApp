@@ -9,7 +9,7 @@ using System.Windows.Media.Animation;
 namespace DownloaderApp.MVVM.ViewModel
 {
     internal class MainVM : BaseVM
-    {
+    { 
         private Page _currentPage = null!;
         public Page CurrentPage
         {

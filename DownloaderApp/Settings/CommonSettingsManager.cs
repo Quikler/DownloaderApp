@@ -1,23 +1,24 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.IO;
 
-namespace DownloaderApp.Utils
+namespace DownloaderApp.Settings
 {
     public static class CommonSettingsManager
     {
         public static bool CreateIfNotExist()
         {
             string? settingsParent = Directory.GetParent(App.CommonSettings)?.FullName;
-
             if (settingsParent is not null && !Directory.Exists(settingsParent))
-                Directory.CreateDirectory(settingsParent);
-
-            if (!File.Exists(App.CommonSettings))
             {
-                using StreamWriter w = File.AppendText(App.CommonSettings);
-                w.Write("{ }");
+                Directory.CreateDirectory(settingsParent);
+            }
+
+            if (!File.Exists(App.CommonSettings) || new FileInfo(App.CommonSettings).Length == 0)
+            {
+                File.WriteAllText(App.CommonSettings, "{ }");
                 return true;
             }
+
             return false;
         }
 

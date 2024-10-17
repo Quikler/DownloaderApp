@@ -144,13 +144,6 @@
 
         </Grid>
 
-        <CheckBox Content="Load preview" 
-                  VerticalAlignment="Bottom"
-                  Foreground="White" 
-                  Margin="0 0 6 6"
-                  IsChecked="{Binding LoadPreview}"
-                  HorizontalAlignment="Right" />
-
         <uc:SearchTextBox Grid.Row="1"
                           Padding="16,8"
                           BorderBrush="#FF004D"
@@ -192,13 +185,14 @@
                                 FontSize="16"
                                 FontWeight="Medium"
                                 Foreground="White"
-                                SelectedPathCommand="{Binding SelectedPathCommand}"
                                 PathMaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
-                                SelectedPath="{Binding SelectedPath, Mode=TwoWay}" />
+                                SelectedPath="{Binding SelectedPath, Mode=TwoWay}"
+                                SelectedPathCommand="{Binding SelectedPathCommand}" />
 
         </Grid>
 
         <uc:MediaCarousel Grid.Row="3"
+                          AudioTrackSource="{Binding AudioSource}"
                           Background="Black"
                           BorderBrush="Black"
                           BorderThickness="1"
@@ -208,7 +202,6 @@
                           IsSourceSelectable="False"
                           MenuBackground="White"
                           MenuForeground="Black"
-                          AudioTrackSource="{Binding AudioSource}"
                           MenuHoverColor="LightGray"
                           Source="{Binding MediaSource}" />
 

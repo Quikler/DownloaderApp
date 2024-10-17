@@ -1,11 +1,12 @@
-﻿using AngleSharp.Media.Dom;
-using AngleSharp.Text;
-using DownloaderApp.Models;
+﻿using DownloaderApp.Models;
 using DownloaderApp.MVVM.Abstractions;
 using DownloaderApp.MVVM.Model;
+using DownloaderApp.Settings;
+using DownloaderApp.Settings.Parsers;
 using DownloaderApp.UserControls;
 using DownloaderApp.Utils;
 using DownloaderApp.Utils.Helpers;
+using DownloaderApp.Utils.Helpers.Youtube;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -41,17 +42,6 @@ namespace DownloaderApp.MVVM.ViewModel
             set { RaiseAndSetIfChanged(ref _audioSource, value); }
         }
 
-        private bool _loadPreview;
-        public bool LoadPreview
-        {
-            get { return _loadPreview; }
-            set
-            {
-                RaiseAndSetIfChanged(ref _loadPreview, value);
-                CommonSettingsManager.ChangeToCommonSettings("loadPreview", value.ToString());
-            }
-        }
-
         public YoutubeVM()
         {
             _youtubeModel = new YoutubeModel();
@@ -75,14 +65,8 @@ namespace DownloaderApp.MVVM.ViewModel
             TextChangedCommand = new RelayCommand(TextChangedCommandExecute, TextChangedCommandCanExecute);
             ButtonClickCommand = new RelayCommand(ClickCommandExecute, ClickCommandCanExecute);
 
-            SelectedPathCommand = new RelayCommand(obj =>
-            {
-                if (!string.IsNullOrWhiteSpace(SelectedPath))
-                    CommonSettingsManager.ChangeToCommonSettings("youtubePath", SelectedPath);
-            });
-
-            SelectedPath = CommonSettingsManager.ReadFromCommonSettings("youtubePath");
-            LoadPreview = CommonSettingsManager.ReadFromCommonSettings("loadPreview").ToBoolean();
+            SelectedPathCommand = new RelayCommand(obj => SettingsManager.Set("youtubePath", SelectedPath));
+            SelectedPath = SettingsManager.Get<string?>("youtubePath", null);
         }
 
         protected override async void TextChangedCommandExecute(object? parameter)
@@ -97,26 +81,32 @@ namespace DownloaderApp.MVVM.ViewModel
             {
                 _youtubeModel.Info = await YTHelper.GetInfoAsync(InputText!);
 
-                if (LoadPreview)
+                if (SettingsManager.Get("loadPreview", false))
                 {
+                    var quality = SettingsManager.Get("videoQuality", 1, new VideoQualityParser());
+
                     _youtubeModel.StreamInfo = _youtubeModel.Info.Value.manifest
-                        .GetVideoOnlyStreams()
-                        .Where(vos => vos.Container == Container.Mp4)
-                        .GetWithHighestVideoQuality();
+                        .GetByVideoQualityExtended(quality);
 
-                    var media = new MediaElement { Source = new Uri(_youtubeModel.StreamInfo.Url) };
-
-                    AudioSource = _youtubeModel.Info.Value.manifest
-                        .GetAudioOnlyStreams()
-                        .GetWithHighestBitrate().Url;
-
-                    media.MediaOpened += (sender, e) =>
+                    if (_youtubeModel.StreamInfo is not null)
                     {
-                        cancellationTokenSource.Cancel();
-                        IsDownloadButtonEnabled = true;
-                    };
+                        var media = new MediaElement { Source = new Uri(_youtubeModel.StreamInfo.Url) };
+                        
+                        var audioSource = _youtubeModel.Info.Value.manifest
+                            .GetAudioOnlyStreams()
+                            .GetWithHighestBitrate();
+                        _youtubeModel.AudioStreamInfo = audioSource;
 
-                    MediaSource = new[] { media };
+                        AudioSource = audioSource.Url;
+
+                        media.MediaOpened += (sender, e) =>
+                        {
+                            cancellationTokenSource.Cancel();
+                            IsDownloadButtonEnabled = true;
+                        };
+
+                        MediaSource = new[] { media };
+                    }
                 }
                 else
                 {
@@ -171,17 +161,26 @@ namespace DownloaderApp.MVVM.ViewModel
             IsDownloadButtonEnabled = false;
             bool isAudio = SelectedIndex == 0;
 
-            var audioStream = _youtubeModel.Info?.manifest
-                .GetAudioOnlyStreams()
-                .GetWithHighestBitrate()!;
+            var audioStream = _youtubeModel.AudioStreamInfo ?? 
+                _youtubeModel.Info?.manifest
+                    .GetAudioOnlyStreams()
+                    .GetWithHighestBitrate()!;
 
             var tempAudioFilePath = await YTHelper.DownloadToTempAsync(audioStream);
 
-            (string mediaType, string extenstion, FFmpegOptions options) =
-                await PrepareDownloadOptionsAsync(_youtubeModel.Info?.video!, isAudio, 
-                t => t.Resolution.Width >= 300 && t.Resolution.Width <= 600);
+            var thumbnailResolution = SettingsManager.Get("thumbnailResolution", new Resolution(480, 360), new ResolutionParser());
+            var thumbnail = _youtubeModel.Info?.video.Thumbnails.GetByResolution(thumbnailResolution);
 
-            string destinationFilePath = $"{SelectedPath}\\{options.Title}{extenstion}";
+            //(string mediaType, string extenstion, FFmpegOptions options) =
+            //    await PrepareDownloadOptionsAsync(_youtubeModel.Info?.video!, isAudio, 
+            //    t => t.Resolution.Width >= thumbnailResolution.Width && t.Resolution.Width <= thumbnailResolution.Height);
+
+            (string mediaType, string extension, FFmpegOptions options)
+                = PrepareDownloadOptions(_youtubeModel.Info?.video!, isAudio);
+
+            options.Thumbnail = await YTHelper.GetThumbnailBytesAsync(thumbnail!);
+
+            string destinationFilePath = $"{SelectedPath}\\{options.Title}{extension}";
 
             try
             {
@@ -191,12 +190,15 @@ namespace DownloaderApp.MVVM.ViewModel
                 }
                 else
                 {
-                    var videoStream = _youtubeModel.StreamInfo ?? _youtubeModel.Info?.manifest
-                        .GetVideoOnlyStreams()
-                        .Where(vos => vos.Container == Container.Mp4)
-                        .GetWithHighestVideoQuality()!;
+                    var quality = SettingsManager.Get("videoQuality", 1, new VideoQualityParser());
 
-                    var tempVideoFilePath = await YTHelper.DownloadToTempAsync(videoStream);
+                    if (_youtubeModel.StreamInfo is null || _youtubeModel.StreamInfo.VideoQuality.MaxHeight != quality)
+                    {
+                        _youtubeModel.StreamInfo = _youtubeModel.Info?.manifest
+                            .GetByVideoQualityExtended(quality)!;
+                    }
+
+                    var tempVideoFilePath = await YTHelper.DownloadToTempAsync(_youtubeModel.StreamInfo);
 
                     await FFmpegHelper.MergeVideoAndAudioAsync(destinationFilePath, tempVideoFilePath,
                         tempAudioFilePath, options, true, true);
@@ -227,20 +229,11 @@ namespace DownloaderApp.MVVM.ViewModel
             return true;
         }
 
-        private async Task<(string mediaType, string extension, FFmpegOptions options)> PrepareDownloadOptionsAsync(
-            Video video, bool isAudio, Func<Thumbnail, bool>? thumbnailExpression = null)
+        private static (string mediaType, string extension, FFmpegOptions options) PrepareDownloadOptions(
+            Video video, bool isAudio)
         {
             string mediaType = isAudio ? "Audio" : "Video";
             string extension = isAudio ? ".mp3" : ".mp4";
-
-            byte[]? thumbnail = null;
-            if (thumbnailExpression is not null)
-            {
-                string? url = video.Thumbnails.FirstOrDefault(thumbnailExpression)?.Url;
-
-                if (url is not null)
-                    thumbnail = await YTHelper.GetThumbnailBytesAsync(url);
-            }
 
             var options = new FFmpegOptions
             {
@@ -249,7 +242,6 @@ namespace DownloaderApp.MVVM.ViewModel
                 Date = video.UploadDate.Year,
                 Album = "DownloaderApp",
                 AlbumArtist = "Quikler",
-                Thumbnail = thumbnail,
             };
 
             return (mediaType, extension, options);

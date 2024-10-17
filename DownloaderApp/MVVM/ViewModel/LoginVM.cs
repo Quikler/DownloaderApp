@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace DownloaderApp.MVVM.ViewModel
 {
-    class LoginVM : InputOutputVM
+    internal class LoginVM : InputOutputVM
     {
         public ICommand LoginButtonCommand { get; }
 
@@ -37,12 +37,12 @@ namespace DownloaderApp.MVVM.ViewModel
         {
             LoginButtonCommand = new RelayCommand(LoginButtonCommandExecute, LoginButtonCommandCanExecute);
 
-            Mediator.IInstaApiChanged += (sender, e) =>
+            Mediator.InstaApiChanged += (sender, e) =>
             {
                 if (sender != this)
                 {
-                    _api = e.Api;
-                    InfoText = e.Api.IsUserAuthenticated ? "Logged" : "Not logged";
+                    _api = e;
+                    InfoText = e.IsUserAuthenticated ? "Logged" : "Not logged";
                 }
             };
         }
@@ -86,7 +86,7 @@ namespace DownloaderApp.MVVM.ViewModel
             instaApi.SessionHandler.Save(false);
             _api = instaApi;
 
-            Mediator.NotifyIInstaApiChanged(this, new InstaApiEventArgs(_api));
+            Mediator.NotifyInstaApiChanged(this, _api);
         }
 
         private bool LoginButtonCommandCanExecute(object? parameter)
